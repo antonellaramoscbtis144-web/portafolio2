@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tarea 04 — Guía para aprender CSS3 · Cultura Digital 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink-light: #f7c5d5;
+      --pink-mid:   #e8a0b8;
+      --pink-soft:  #d4789a;
+      --pink-deep:  #b85c7e;
+      --black:      #080808;
+      --black-2:    #111111;
+      --black-3:    #1a1a1a;
+      --black-4:    #222222;
+      --white:      #f5f5f5;
+      --gray:       rgba(245,245,245,0.55);
+      --css-blue:   #264de4;
+      --css-light:  #2965f1;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; }
+
+    /* ─── BACK BUTTON ─── */
+    .nav-back {
+      position: fixed; top: 1.4rem; left: 1.4rem; z-index: 200;
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+      background: rgba(8,8,8,0.85);
+      border: 1px solid rgba(247,197,213,0.25);
+      color: var(--pink-light);
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+      font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.55rem 1rem 0.55rem 0.8rem;
+      border-radius: 999px; backdrop-filter: blur(12px);
+      transition: background 0.25s, color 0.25s;
+    }
+    .nav-back:hover { background: var(--pink-deep); color: #fff; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      position: fixed; top: 0; right: 0; height: 100vh; width: 200px;
+      background: #0f0f0f;
+      border-left: 1px solid rgba(184,92,126,0.18);
+      padding: 5rem 1.2rem 2rem;
+      display: flex; flex-direction: column; gap: 0.2rem;
+      z-index: 100; overflow-y: auto;
+    }
+    .sidebar-title {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--pink-deep); margin-bottom: 0.8rem;
+    }
+    .sidebar a {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.05em; color: var(--gray);
+      text-decoration: none; padding: 0.3rem 0.5rem;
+      border-radius: 4px; border-left: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .sidebar a:hover { color: var(--pink-light); border-left-color: var(--pink-deep); }
+    @media (max-width: 900px) { .sidebar { display: none; } }
+
+    /* ─────────────────────────────────────────
+       HERO — portada única: dos paneles + CSS logo animado
+    ───────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      position: relative; overflow: hidden;
+    }
+
+    /* Panel izquierdo: azul CSS con patrón */
+    .hero-left-panel {
+      background: var(--css-blue);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+
+    /* Patrón diagonal blanco sobre azul */
+    .hero-left-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.04) 0px,
+        rgba(255,255,255,0.04) 1px,
+        transparent 1px,
+        transparent 36px
+      );
+    }
+
+    /* Número decorativo */
+    .hero-panel-num {
+      position: absolute; top: 2rem; left: 2.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 10rem; font-weight: 900; font-style: italic;
+      color: rgba(255,255,255,0.06); line-height: 1;
+      user-select: none;
+    }
+
+    /* Logo CSS3 SVG animado */
+    .css3-logo {
+      position: relative; z-index: 2;
+      animation: css-float 4s ease-in-out infinite;
+      filter: drop-shadow(0 24px 60px rgba(0,0,0,0.5));
+    }
+    @keyframes css-float {
+      0%,100%{ transform: translateY(0) rotate(-2deg); }
+      50%{ transform: translateY(-18px) rotate(2deg); }
+    }
+
+    /* Panel derecho: negro con texto */
+    .hero-right-panel {
+      background: var(--black-2);
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 7rem 3.5rem 5rem;
+      position: relative; overflow: hidden;
+    }
+
+    /* Cuadrícula rosa consistente */
+    .hero-right-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(184,92,126,0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,92,126,0.1) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block; position: relative; z-index: 1;
+      background: var(--css-blue); color: #fff;
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.25rem 0.8rem; border-radius: 3px;
+      margin-bottom: 1.4rem; width: fit-content;
+    }
+
+    .hero-right-panel h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      font-weight: 900; line-height: 1.05;
+      color: var(--white); position: relative; z-index: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-right-panel h1 em {
+      font-style: italic; color: var(--pink-light);
+    }
+
+    .hero-sub {
+      font-size: 0.95rem; color: var(--gray); line-height: 1.7;
+      max-width: 400px; position: relative; z-index: 1; margin-bottom: 2rem;
+    }
+
+    .hero-meta {
+      display: flex; gap: 2rem; position: relative; z-index: 1; margin-bottom: 2rem;
+    }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 0.15rem; }
+    .hero-meta-label {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--css-blue);
+    }
+    .hero-meta-val { font-size: 0.82rem; color: var(--gray); }
+
+    /* Barra de progreso */
+    .progress-wrap { position: relative; z-index: 1; }
+    .progress-label {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--pink-soft); margin-bottom: 0.4rem;
+    }
+    .progress-bar {
+      height: 3px; background: rgba(255,255,255,0.07);
+      border-radius: 999px; width: 200px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--css-blue), var(--pink-soft));
+      border-radius: 999px; width: 0;
+      animation: fill-bar 1.5s 0.5s ease forwards;
+    }
+    @keyframes fill-bar { to { width: 100%; } }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-left-panel { height: 45vw; min-height: 200px; }
+      .hero-panel-num { font-size: 5rem; }
+      .hero-right-panel { padding: 3rem 1.5rem 3rem; }
+    }
+
+    /* ─── LAYOUT PRINCIPAL ─── */
+    .main-wrap {
+      max-width: 900px; margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+    @media (min-width: 900px) {
+      .main-wrap { padding-right: 220px; max-width: 1100px; }
+    }
+
+    /* ─── SECTION LABEL ─── */
+    .sec-label {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1.8rem; margin-top: 4.5rem;
+    }
+    .sec-label:first-child { margin-top: 0; }
+    .sec-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .sec-label span {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.28em; text-transform: uppercase; color: var(--pink-soft);
+    }
+    .sec-label::after {
+      content: ''; flex: 1; height: 1px; background: rgba(247,197,213,0.1);
+    }
+
+    .sec-intro {
+      font-size: 0.92rem; color: var(--gray); line-height: 1.85;
+      margin-bottom: 2rem; max-width: 720px;
+    }
+
+    /* ─── CALLOUT ─── */
+    .callout {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--black-3);
+      border: 1px solid rgba(38,77,228,0.2);
+      border-left: 3px solid var(--css-blue);
+      border-radius: 0 10px 10px 0;
+      padding: 1.2rem 1.4rem; margin: 1.5rem 0;
+    }
+    .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout p { font-size: 0.85rem; color: var(--gray); line-height: 1.7; margin: 0; }
+    .callout p strong { color: var(--white); }
+
+    /* ─── CODE BLOCK ─── */
+    .code-block-wrap { margin: 1.5rem 0; }
+    .code-block-head {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.06); border-bottom: none;
+      border-radius: 10px 10px 0 0; padding: 0.6rem 1rem;
+    }
+    .code-block-dots { display: flex; gap: 5px; }
+    .cbd { width: 9px; height: 9px; border-radius: 50%; }
+    .cbd-r { background: #ff5f57; }
+    .cbd-y { background: #febc2e; }
+    .cbd-g { background: #28c840; }
+    .code-block-lang {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.2);
+    }
+    .code-block {
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.06); border-top: none;
+      border-radius: 0 0 10px 10px;
+      padding: 1.2rem 1.4rem;
+      font-family: 'DM Mono', monospace; font-size: 0.73rem;
+      line-height: 1.75; overflow-x: auto; white-space: pre;
+    }
+
+    /* Syntax */
+    .sl  { color: #89ddff; }   /* selector */
+    .pr  { color: var(--pink-soft); } /* property */
+    .vl  { color: #c3e88d; }   /* value */
+    .nm  { color: #f78c6c; }   /* number */
+    .fn  { color: #82aaff; }   /* function */
+    .cm  { color: #546e7a; font-style: italic; }
+    .kw  { color: #c792ea; }   /* keyword */
+    .un  { color: #ffcb6b; }   /* unit */
+    .at  { color: #ffcb6b; }   /* at-rule */
+    .tx  { color: rgba(245,245,245,0.75); }
+
+    /* ─── PROP CARDS GRID ─── */
+    .prop-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem; margin-bottom: 2rem;
+    }
+
+    .prop-card {
+      background: var(--black-3);
+      border: 1px solid rgba(38,77,228,0.15);
+      border-radius: 10px; overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .prop-card:hover { border-color: rgba(38,77,228,0.4); transform: translateY(-3px); }
+
+    .prop-card-head {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.9rem 1.1rem;
+      border-bottom: 1px solid rgba(38,77,228,0.08);
+      background: rgba(0,0,0,0.25);
+    }
+    .prop-chip {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      color: var(--css-blue);
+      background: rgba(38,77,228,0.1);
+      border: 1px solid rgba(38,77,228,0.2);
+      padding: 0.2rem 0.6rem; border-radius: 4px; white-space: nowrap;
+    }
+    .prop-name { font-size: 0.82rem; color: var(--white); font-weight: 500; }
+    .prop-desc {
+      font-size: 0.78rem; color: var(--gray); line-height: 1.6;
+      padding: 0.8rem 1.1rem 0;
+    }
+    .prop-code {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      background: #0a0a0a; border-radius: 6px;
+      padding: 0.6rem 0.9rem; margin: 0.7rem;
+      line-height: 1.65; overflow-x: auto; white-space: pre;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    /* ─── PREVIEW BOX ─── */
+    .preview-wrap {
+      background: #1e1e2e; color: var(--white);
+      border-radius: 10px; padding: 0;
+      margin: 1rem 0 2rem;
+      border: 1px solid rgba(38,77,228,0.2);
+      overflow: hidden; position: relative;
+    }
+    .preview-bar {
+      background: #12121f;
+      border-bottom: 1px solid rgba(38,77,228,0.15);
+      padding: 0.55rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .preview-bar-dots { display: flex; gap: 5px; }
+    .preview-bar span {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2);
+      margin-left: auto;
+    }
+    .preview-content { padding: 1.4rem 1.6rem; }
+
+    /* ─── ANATOMY ─── */
+    .anatomy {
+      background: var(--black-3);
+      border: 1px solid rgba(38,77,228,0.15);
+      border-radius: 12px; padding: 2rem; margin: 1.5rem 0;
+      font-family: 'DM Mono', monospace; font-size: 0.78rem; line-height: 2;
+    }
+    .anat-arrow {
+      font-size: 0.62rem; color: var(--css-blue);
+      background: rgba(38,77,228,0.08);
+      padding: 0.1rem 0.5rem; border-radius: 3px;
+      border: 1px solid rgba(38,77,228,0.2); white-space: nowrap;
+    }
+
+    /* ─── ATTR TABLE ─── */
+    .attr-table {
+      width: 100%; border-collapse: collapse; font-size: 0.8rem; margin: 1.2rem 0 2rem;
+    }
+    .attr-table th {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink-soft);
+      padding: 0.6rem 1rem; text-align: left;
+      border-bottom: 1px solid rgba(184,92,126,0.2);
+    }
+    .attr-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--gray); vertical-align: top;
+    }
+    .attr-table tr:hover td { background: rgba(38,77,228,0.04); }
+    .attr-table td:first-child {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--css-blue);
+    }
+    .attr-table td:nth-child(2) { color: var(--white); }
+
+    /* ─── PULLQUOTE ─── */
+    .pullquote {
+      border-left: 3px solid var(--css-blue);
+      padding: 1.2rem 1.8rem; margin: 2rem 0;
+      background: var(--black-3); border-radius: 0 8px 8px 0;
+    }
+    .pullquote p {
+      font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      font-style: italic; color: var(--pink-light); line-height: 1.6; margin: 0;
+    }
+    .pullquote cite {
+      display: block; margin-top: 0.5rem;
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.15em; color: var(--css-blue);
+      font-style: normal; text-transform: uppercase;
+    }
+
+    /* ─── CHIP ROW ─── */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0 1.5rem; }
+    .chip {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.08em; color: var(--pink-mid);
+      background: rgba(184,92,126,0.1); border: 1px solid rgba(184,92,126,0.2);
+      padding: 0.25rem 0.65rem; border-radius: 999px;
+    }
+
+    /* ─── SPECIFICITY DIAGRAM ─── */
+    .specificity-row {
+      display: flex; gap: 0.8rem; align-items: stretch;
+      margin: 1.5rem 0; flex-wrap: wrap;
+    }
+    .spec-box {
+      flex: 1; min-width: 120px;
+      border-radius: 10px; padding: 1.2rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+      text-align: center;
+    }
+    .spec-box-num {
+      font-family: 'Playfair Display', serif; font-size: 2.5rem;
+      font-weight: 900; line-height: 1;
+    }
+    .spec-box-label {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .spec-box-example {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      opacity: 0.7;
+    }
+
+    /* ─── COLOR SWATCH ─── */
+    .color-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.8rem; margin: 1.5rem 0;
+    }
+    .swatch {
+      border-radius: 8px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .swatch-color { height: 56px; }
+    .swatch-info {
+      padding: 0.5rem 0.7rem;
+      background: var(--black-3);
+    }
+    .swatch-name {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      color: var(--white); display: block; margin-bottom: 0.1rem;
+    }
+    .swatch-val {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--gray);
+    }
+
+    /* ─── BOX MODEL DIAGRAM ─── */
+    .box-model {
+      display: flex; align-items: center; justify-content: center;
+      margin: 1.5rem 0; padding: 1.5rem;
+      background: var(--black-3);
+      border: 1px solid rgba(38,77,228,0.15); border-radius: 12px;
+    }
+    .bm-margin {
+      background: rgba(255,152,0,0.12); border: 2px dashed rgba(255,152,0,0.4);
+      border-radius: 8px; padding: 16px; position: relative;
+    }
+    .bm-border {
+      background: rgba(38,77,228,0.15); border: 2px solid rgba(38,77,228,0.5);
+      border-radius: 4px; padding: 12px; position: relative;
+    }
+    .bm-padding {
+      background: rgba(195,232,141,0.1); border: 2px dashed rgba(195,232,141,0.3);
+      border-radius: 3px; padding: 12px; position: relative;
+    }
+    .bm-content {
+      background: rgba(247,197,213,0.15); border: 1px solid rgba(247,197,213,0.3);
+      border-radius: 2px; padding: 10px 20px;
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      color: var(--pink-light); text-align: center;
+    }
+    .bm-label {
+      position: absolute; top: 2px; left: 6px;
+      font-family: 'DM Mono', monospace; font-size: 0.52rem;
+      letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7;
+    }
+    .bm-margin .bm-label { color: #ff9800; }
+    .bm-border .bm-label { color: var(--css-blue); }
+    .bm-padding .bm-label { color: #c3e88d; }
+
+    /* ─── FLEX DEMO ─── */
+    .flex-demo {
+      display: flex; gap: 0.5rem; padding: 1rem;
+      background: rgba(38,77,228,0.06);
+      border: 1px dashed rgba(38,77,228,0.2); border-radius: 8px;
+      margin: 0.8rem 0;
+    }
+    .flex-demo.col { flex-direction: column; }
+    .flex-demo.center { justify-content: center; align-items: center; }
+    .flex-demo.between { justify-content: space-between; }
+    .flex-demo.wrap { flex-wrap: wrap; }
+    .flex-item {
+      background: var(--css-blue); color: #fff;
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      padding: 0.4rem 0.7rem; border-radius: 4px; text-align: center;
+      min-width: 36px;
+    }
+    .flex-item.grow { flex: 1; }
+
+    /* ─── GRID DEMO ─── */
+    .grid-demo {
+      display: grid; gap: 0.5rem; padding: 1rem;
+      background: rgba(38,77,228,0.06);
+      border: 1px dashed rgba(38,77,228,0.2); border-radius: 8px;
+      margin: 0.8rem 0;
+    }
+    .grid-demo.cols3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-demo.cols2 { grid-template-columns: 1fr 2fr; }
+    .grid-demo.areas {
+      grid-template-columns: 1fr 3fr;
+      grid-template-rows: auto 1fr auto;
+    }
+    .grid-item {
+      background: rgba(38,77,228,0.3); border: 1px solid rgba(38,77,228,0.4);
+      color: #fff; font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      padding: 0.5rem; border-radius: 4px; text-align: center;
+    }
+    .grid-item.span2 { grid-column: span 2; }
+    .grid-item.span3 { grid-column: span 3; }
+    .grid-item.header { background: rgba(184,92,126,0.3); border-color: rgba(184,92,126,0.4); }
+    .grid-item.sidebar { background: rgba(255,152,0,0.2); border-color: rgba(255,152,0,0.4); }
+
+    /* ─── ANIMATION DEMO ─── */
+    .anim-box {
+      width: 48px; height: 48px; border-radius: 8px;
+      display: inline-block; margin: 0.5rem;
+    }
+    .anim-pulse { background: var(--css-blue); animation: pulse-demo 2s ease-in-out infinite; }
+    @keyframes pulse-demo { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.5; transform:scale(0.8); } }
+    .anim-spin { background: var(--pink-deep); animation: spin-demo 2s linear infinite; border-radius: 50%; }
+    @keyframes spin-demo { to{ transform:rotate(360deg); } }
+    .anim-bounce { background: #c3e88d; animation: bounce-demo 1s ease infinite; }
+    @keyframes bounce-demo { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-20px); } }
+    .anim-slide { background: #ffcb6b; animation: slide-demo 2s ease-in-out infinite alternate; }
+    @keyframes slide-demo { from{ transform:translateX(0); } to{ transform:translateX(60px); } }
+    .anim-row {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.2rem 1.4rem;
+      background: var(--black-3); border-radius: 10px;
+      border: 1px solid rgba(38,77,228,0.12); margin: 1rem 0; flex-wrap: wrap;
+    }
+    .anim-label {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray);
+    }
+
+    /* ─── ARTICLE FOOTER ─── */
+    .article-footer {
+      border-top: 1px solid rgba(184,92,126,0.2);
+      padding-top: 2rem; margin-top: 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .article-footer-text {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink-deep);
+    }
+    .back-btn-bottom {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; background: transparent;
+      border: 1px solid var(--pink-deep); color: var(--pink-light);
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+      font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.6rem 1.2rem; border-radius: 999px;
+      transition: background 0.25s, color 0.25s;
+    }
+    .back-btn-bottom:hover { background: var(--pink-deep); color: #fff; }
+
+    footer {
+      background: var(--black); border-top: 1px solid rgba(184,92,126,0.2);
+      padding: 2rem; text-align: center;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    footer p { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; }
+    footer .f-school { color: var(--pink-mid); }
+    footer .f-spec   { color: var(--pink-deep); }
+    footer .f-name   { color: rgba(245,245,245,0.4); margin-top: 0.2rem; }
+  </style>
+</head>
+<body>
+
+  <a class="nav-back" href="index.html">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Regresar
+  </a>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <p class="sidebar-title">Contenido</p>
+    <a href="#intro">¿Qué es CSS3?</a>
+    <a href="#sintaxis">Sintaxis básica</a>
+    <a href="#selectores">Selectores</a>
+    <a href="#box-model">Box Model</a>
+    <a href="#colores">Colores y fondos</a>
+    <a href="#tipografia">Tipografía</a>
+    <a href="#display">Display y posición</a>
+    <a href="#flexbox">Flexbox</a>
+    <a href="#grid">CSS Grid</a>
+    <a href="#transiciones">Transiciones</a>
+    <a href="#animaciones">Animaciones</a>
+    <a href="#responsivo">Diseño responsivo</a>
+    <a href="#variables">Variables CSS</a>
+    <a href="#buenas">Buenas prácticas</a>
+  </nav>
+
+  <!-- ══════ HERO ══════ -->
+  <section class="hero">
+    <!-- Panel izquierdo: azul CSS3 con logo -->
+    <div class="hero-left-panel">
+      <div class="hero-panel-num">04</div>
+      <!-- Logo CSS3 SVG -->
+      <svg class="css3-logo" viewBox="0 0 452 520" width="210" xmlns="http://www.w3.org/2000/svg">
+        <path d="M41 460L0 0h451l-41 460-185 52L41 460z" fill="#0070bb"/>
+        <path d="M226 472l149-41 35-394H226V472z" fill="#0086d4"/>
+        <path d="M226 216h-97l-6-64h103v-64H57l16 178h153v-50zm0 147l-74-20-5-55H73l10 107 143 40V363z" fill="white"/>
+        <path d="M226 216v50h95l-9 98-86 24v66l143-40 10-107H226v-91zm0-144v64h189l-5-64H226z" fill="white" opacity=".8"/>
+        <text x="290" y="130" font-family="monospace" font-size="62" font-weight="900" fill="rgba(255,255,255,0.15)">3</text>
+      </svg>
+    </div>
+
+    <!-- Panel derecho: texto -->
+    <div class="hero-right-panel">
+      <span class="hero-tag">Tarea 04 · Cultura Digital 2</span>
+      <h1>Guía para<br>aprender <em>CSS3</em></h1>
+      <p class="hero-sub">
+        De cero a dominar las hojas de estilos en cascada. Aprende selectores, el modelo de caja,
+        Flexbox, Grid, animaciones y diseño responsivo con ejemplos visuales interactivos.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Nivel</span>
+          <span class="hero-meta-val">Principiante</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Versión</span>
+          <span class="hero-meta-val">CSS 3+</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Secciones</span>
+          <span class="hero-meta-val">14 temas</span>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <p class="progress-label">Guía completa</p>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ CONTENIDO ══════ -->
+  <main class="main-wrap">
+
+    <!-- ══ 01 · ¿QUÉ ES CSS3? ══ -->
+    <div class="sec-label" id="intro">
+      <span class="sec-dot" style="background:var(--css-blue)"></span>
+      <span>01 · ¿Qué es CSS3?</span>
+    </div>
+
+    <p class="sec-intro">
+      <strong style="color:var(--white)">CSS</strong> significa <em>Cascading Style Sheets</em> 
+      (Hojas de Estilo en Cascada). Es el lenguaje que controla <strong style="color:var(--white)">cómo se 
+      ve</strong> todo lo que está estructurado en HTML: colores, tamaños, tipografías, espaciados, 
+      animaciones y layouts.
+    </p>
+
+    <div class="callout">
+      <span class="callout-icon">🎨</span>
+      <p><strong>Analogía:</strong> Si HTML es la estructura de una casa (paredes, puertas, ventanas), 
+      CSS es todo lo demás: la pintura, los muebles, la iluminación, las cortinas y el jardín. 
+      Sin CSS, la web sería solo texto negro sobre fondo blanco.</p>
+    </div>
+
+    <p class="sec-intro">
+      <strong style="color:var(--white)">CSS3</strong> es la versión más reciente, que se desarrolla en 
+      módulos independientes. Trajo Flexbox, Grid, variables nativas, animaciones, gradientes, 
+      fuentes web, filtros y media queries sin necesitar JavaScript ni herramientas externas.
+    </p>
+
+    <div class="chip-row">
+      <span class="chip">Creado en 1996 por Håkon Wium Lie</span>
+      <span class="chip">Estándar W3C</span>
+      <span class="chip">Extensión .css</span>
+      <span class="chip">Separación de contenido y presentación</span>
+      <span class="chip">Funciona en todos los navegadores</span>
+    </div>
+
+    <!-- 3 formas de usar CSS -->
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">3 formas de incluir CSS</span>
+      </div>
+      <div class="code-block"><span class="cm">/* 1. EXTERNO — el más recomendado */</span>
+<span class="cm">/* En el &lt;head&gt; del HTML: */</span>
+<span class="sl">&lt;link</span> <span class="at">rel=</span><span class="vl">"stylesheet"</span> <span class="at">href=</span><span class="vl">"estilos.css"</span><span class="sl">/&gt;</span>
+
+<span class="cm">/* 2. INTERNO — dentro del &lt;head&gt; */</span>
+<span class="sl">&lt;style&gt;</span>
+  <span class="sl">body</span> { <span class="pr">background</span>: <span class="vl">#000</span>; }
+<span class="sl">&lt;/style&gt;</span>
+
+<span class="cm">/* 3. EN LÍNEA — solo para casos muy específicos */</span>
+<span class="sl">&lt;p</span> <span class="at">style=</span><span class="vl">"color: red; font-size: 18px;"</span><span class="sl">&gt;</span><span class="tx">Texto</span><span class="sl">&lt;/p&gt;</span></div>
+    </div>
+
+    <!-- ══ 02 · SINTAXIS ══ -->
+    <div class="sec-label" id="sintaxis">
+      <span class="sec-dot" style="background:var(--pink-soft)"></span>
+      <span>02 · Sintaxis básica</span>
+    </div>
+
+    <p class="sec-intro">Toda regla CSS sigue la misma estructura: un selector y un bloque de declaraciones.</p>
+
+    <!-- Anatomía de una regla CSS -->
+    <div class="anatomy">
+      <p style="color:var(--css-blue);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem">Anatomía de una regla CSS</p>
+
+      <div style="font-size:0.82rem;line-height:2.2">
+        <span class="sl">h1</span> &nbsp;<span style="color:rgba(245,245,245,0.3)">{</span><br>
+        &nbsp;&nbsp;<span class="pr">color</span><span style="color:rgba(245,245,245,0.3)">:</span>&nbsp;<span class="vl">#f7c5d5</span><span style="color:rgba(245,245,245,0.3)">;</span><br>
+        &nbsp;&nbsp;<span class="pr">font-size</span><span style="color:rgba(245,245,245,0.3)">:</span>&nbsp;<span class="nm">2</span><span class="un">rem</span><span style="color:rgba(245,245,245,0.3)">;</span><br>
+        <span style="color:rgba(245,245,245,0.3)">}</span>
+      </div>
+
+      <div style="display:flex;gap:2rem;padding:1rem 0;flex-wrap:wrap;margin-top:0.5rem">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem">
+          <span style="color:#89ddff;font-size:0.82rem">h1</span>
+          <span class="anat-arrow">Selector</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem">
+          <span style="color:var(--pink-soft);font-size:0.82rem">color</span>
+          <span class="anat-arrow">Propiedad</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem">
+          <span style="color:#c3e88d;font-size:0.82rem">#f7c5d5</span>
+          <span class="anat-arrow">Valor</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem">
+          <span style="color:rgba(245,245,245,0.4);font-size:0.82rem">;</span>
+          <span class="anat-arrow">Punto y coma</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem">
+          <span style="color:rgba(245,245,245,0.4);font-size:0.82rem">{ }</span>
+          <span class="anat-arrow">Bloque declaración</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 03 · SELECTORES ══ -->
+    <div class="sec-label" id="selectores">
+      <span class="sec-dot" style="background:#89ddff"></span>
+      <span>03 · Selectores</span>
+    </div>
+
+    <p class="sec-intro">Los selectores determinan <em>a qué elementos HTML</em> se aplican los estilos. Son la parte más poderosa de CSS.</p>
+
+    <div class="prop-grid">
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">Elemento</span><span class="prop-name">Selector de etiqueta</span></div>
+        <p class="prop-desc">Aplica estilos a todas las instancias de esa etiqueta HTML en la página.</p>
+        <div class="prop-code"><span class="sl">p</span> { <span class="pr">color</span>: <span class="vl">white</span>; }
+<span class="sl">h1</span> { <span class="pr">font-size</span>: <span class="nm">2</span><span class="un">rem</span>; }
+<span class="sl">a</span> { <span class="pr">text-decoration</span>: <span class="vl">none</span>; }</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">.clase</span><span class="prop-name">Selector de clase</span></div>
+        <p class="prop-desc">Aplica estilos a todos los elementos con esa clase. El más usado. Se puede repetir en varios elementos.</p>
+        <div class="prop-code"><span class="sl">.boton</span> {
+  <span class="pr">background</span>: <span class="vl">#264de4</span>;
+  <span class="pr">border-radius</span>: <span class="nm">8</span><span class="un">px</span>;
+}</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">#id</span><span class="prop-name">Selector de ID</span></div>
+        <p class="prop-desc">Aplica estilos a un elemento único con ese ID. Solo debe haber un elemento con ese ID por página.</p>
+        <div class="prop-code"><span class="sl">#encabezado</span> {
+  <span class="pr">height</span>: <span class="nm">80</span><span class="un">px</span>;
+  <span class="pr">position</span>: <span class="vl">sticky</span>;
+}</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">A B</span><span class="prop-name">Selector descendiente</span></div>
+        <p class="prop-desc">Selecciona elementos B que estén dentro de A, sin importar qué tan anidados estén.</p>
+        <div class="prop-code"><span class="sl">nav a</span> {
+  <span class="pr">color</span>: <span class="vl">white</span>;
+  <span class="pr">font-weight</span>: <span class="nm">500</span>;
+}</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">:hover :focus</span><span class="prop-name">Pseudoclases</span></div>
+        <p class="prop-desc">Seleccionan elementos en un estado específico: cuando el cursor pasa, está enfocado, es el primero, etc.</p>
+        <div class="prop-code"><span class="sl">button:hover</span> {
+  <span class="pr">background</span>: <span class="vl">#0044bb</span>;
+}
+<span class="sl">input:focus</span> {
+  <span class="pr">border-color</span>: <span class="vl">#264de4</span>;
+}
+<span class="sl">li:first-child</span> {
+  <span class="pr">font-weight</span>: <span class="vl">bold</span>;
+}</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">::before ::after</span><span class="prop-name">Pseudoelementos</span></div>
+        <p class="prop-desc">Crean elementos virtuales antes o después del contenido, sin modificar el HTML.</p>
+        <div class="prop-code"><span class="sl">h2::before</span> {
+  <span class="pr">content</span>: <span class="vl">"✦ "</span>;
+  <span class="pr">color</span>: <span class="vl">#f7c5d5</span>;
+}
+<span class="sl">p::first-line</span> {
+  <span class="pr">font-weight</span>: <span class="vl">bold</span>;
+}</div>
+      </div>
+    </div>
+
+    <!-- Especificidad -->
+    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--css-blue);margin-bottom:1rem">Jerarquía de especificidad (de menor a mayor)</p>
+    <div class="specificity-row">
+      <div class="spec-box" style="background:rgba(137,221,255,0.08);border:1px solid rgba(137,221,255,0.2)">
+        <span class="spec-box-num" style="color:#89ddff">0</span>
+        <span class="spec-box-label" style="color:#89ddff">Elemento</span>
+        <span class="spec-box-example">p, h1, div</span>
+      </div>
+      <div style="display:flex;align-items:center;font-size:1.2rem;color:var(--gray)">→</div>
+      <div class="spec-box" style="background:rgba(195,232,141,0.08);border:1px solid rgba(195,232,141,0.2)">
+        <span class="spec-box-num" style="color:#c3e88d">10</span>
+        <span class="spec-box-label" style="color:#c3e88d">Clase</span>
+        <span class="spec-box-example">.card, .btn</span>
+      </div>
+      <div style="display:flex;align-items:center;font-size:1.2rem;color:var(--gray)">→</div>
+      <div class="spec-box" style="background:rgba(247,197,213,0.08);border:1px solid rgba(247,197,213,0.2)">
+        <span class="spec-box-num" style="color:var(--pink-light)">100</span>
+        <span class="spec-box-label" style="color:var(--pink-light)">ID</span>
+        <span class="spec-box-example">#header</span>
+      </div>
+      <div style="display:flex;align-items:center;font-size:1.2rem;color:var(--gray)">→</div>
+      <div class="spec-box" style="background:rgba(247,135,108,0.08);border:1px solid rgba(247,135,108,0.2)">
+        <span class="spec-box-num" style="color:#f7876c">1000</span>
+        <span class="spec-box-label" style="color:#f7876c">!important</span>
+        <span class="spec-box-example">evitar</span>
+      </div>
+    </div>
+
+    <!-- ══ 04 · BOX MODEL ══ -->
+    <div class="sec-label" id="box-model">
+      <span class="sec-dot" style="background:#ffcb6b"></span>
+      <span>04 · El Modelo de Caja (Box Model)</span>
+    </div>
+
+    <p class="sec-intro">
+      Todo elemento HTML es una caja rectangular con cuatro capas. Entender el Box Model es fundamental 
+      para controlar el espaciado y tamaño de los elementos.
+    </p>
+
+    <div class="box-model">
+      <div class="bm-margin">
+        <span class="bm-label">margin (exterior)</span>
+        <div class="bm-border">
+          <span class="bm-label">border</span>
+          <div class="bm-padding">
+            <span class="bm-label">padding (interior)</span>
+            <div class="bm-content">content<br><span style="opacity:0.6;font-size:0.58rem">ancho × alto</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Box Model completo</span>
+      </div>
+      <div class="code-block"><span class="sl">.caja</span> {
+  <span class="cm">/* Tamaño del contenido */</span>
+  <span class="pr">width</span>: <span class="nm">300</span><span class="un">px</span>;
+  <span class="pr">height</span>: <span class="nm">150</span><span class="un">px</span>;
+
+  <span class="cm">/* Relleno interno */</span>
+  <span class="pr">padding</span>: <span class="nm">20</span><span class="un">px</span>;             <span class="cm">/* todos los lados */</span>
+  <span class="pr">padding</span>: <span class="nm">10</span><span class="un">px</span> <span class="nm">20</span><span class="un">px</span>;         <span class="cm">/* vertical horizontal */</span>
+  <span class="pr">padding-top</span>: <span class="nm">10</span><span class="un">px</span>;          <span class="cm">/* solo arriba */</span>
+
+  <span class="cm">/* Borde */</span>
+  <span class="pr">border</span>: <span class="nm">2</span><span class="un">px</span> <span class="vl">solid</span> <span class="vl">#264de4</span>;
+  <span class="pr">border-radius</span>: <span class="nm">12</span><span class="un">px</span>;         <span class="cm">/* esquinas redondeadas */</span>
+
+  <span class="cm">/* Margen externo */</span>
+  <span class="pr">margin</span>: <span class="nm">0</span> <span class="vl">auto</span>;              <span class="cm">/* centrar horizontalmente */</span>
+  <span class="pr">margin-bottom</span>: <span class="nm">2</span><span class="un">rem</span>;
+
+  <span class="cm">/* IMPORTANTE: incluye padding y border en el width */</span>
+  <span class="pr">box-sizing</span>: <span class="vl">border-box</span>;
+}</div>
+    </div>
+
+    <!-- ══ 05 · COLORES Y FONDOS ══ -->
+    <div class="sec-label" id="colores">
+      <span class="sec-dot" style="background:var(--pink-soft)"></span>
+      <span>05 · Colores y fondos</span>
+    </div>
+
+    <p class="sec-intro">CSS ofrece múltiples formas de definir colores y fondos, desde nombres básicos hasta gradientes complejos.</p>
+
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f7c5d5"></div>
+        <div class="swatch-info"><span class="swatch-name">HEX</span><span class="swatch-val">#f7c5d5</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:rgb(38,77,228)"></div>
+        <div class="swatch-info"><span class="swatch-name">RGB</span><span class="swatch-val">rgb(38,77,228)</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:rgba(184,92,126,0.6)"></div>
+        <div class="swatch-info"><span class="swatch-name">RGBA</span><span class="swatch-val">rgba(184,92,126,0.6)</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:hsl(340,70%,75%)"></div>
+        <div class="swatch-info"><span class="swatch-name">HSL</span><span class="swatch-val">hsl(340,70%,75%)</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:linear-gradient(135deg,#f7c5d5,#264de4)"></div>
+        <div class="swatch-info"><span class="swatch-name">Gradiente lineal</span><span class="swatch-val">linear-gradient</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:radial-gradient(circle,#f7c5d5,#080808)"></div>
+        <div class="swatch-info"><span class="swatch-name">Gradiente radial</span><span class="swatch-val">radial-gradient</span></div>
+      </div>
+    </div>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Colores y fondos</span>
+      </div>
+      <div class="code-block"><span class="sl">.elemento</span> {
+  <span class="cm">/* Colores de texto */</span>
+  <span class="pr">color</span>: <span class="vl">#f7c5d5</span>;           <span class="cm">/* hexadecimal */</span>
+  <span class="pr">color</span>: <span class="fn">rgb</span>(<span class="nm">247</span>, <span class="nm">197</span>, <span class="nm">213</span>);   <span class="cm">/* RGB */</span>
+  <span class="pr">color</span>: <span class="fn">rgba</span>(<span class="nm">247</span>, <span class="nm">197</span>, <span class="nm">213</span>, <span class="nm">0.8</span>); <span class="cm">/* con transparencia */</span>
+  <span class="pr">color</span>: <span class="fn">hsl</span>(<span class="nm">340</span>, <span class="nm">70%</span>, <span class="nm">85%</span>);   <span class="cm">/* hue saturation light */</span>
+
+  <span class="cm">/* Fondos */</span>
+  <span class="pr">background-color</span>: <span class="vl">#111</span>;
+  <span class="pr">background-image</span>: <span class="fn">url</span>(<span class="vl">'imagen.jpg'</span>);
+  <span class="pr">background-size</span>: <span class="vl">cover</span>;
+  <span class="pr">background-position</span>: <span class="vl">center</span>;
+  <span class="pr">background-repeat</span>: <span class="vl">no-repeat</span>;
+
+  <span class="cm">/* Gradiente lineal */</span>
+  <span class="pr">background</span>: <span class="fn">linear-gradient</span>(
+    <span class="nm">135</span><span class="un">deg</span>,
+    <span class="vl">#f7c5d5</span> <span class="nm">0%</span>,
+    <span class="vl">#264de4</span> <span class="nm">100%</span>
+  );
+}</div>
+    </div>
+
+    <!-- ══ 06 · TIPOGRAFÍA ══ -->
+    <div class="sec-label" id="tipografia">
+      <span class="sec-dot" style="background:#c3e88d"></span>
+      <span>06 · Tipografía</span>
+    </div>
+
+    <p class="sec-intro">CSS controla completamente cómo se ve el texto: familia tipográfica, tamaño, peso, interlineado, alineación y más.</p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Propiedades tipográficas</span>
+      </div>
+      <div class="code-block"><span class="sl">body</span> {
+  <span class="cm">/* Familia de fuente con fallback */</span>
+  <span class="pr">font-family</span>: <span class="vl">'DM Sans'</span>, <span class="vl">Arial</span>, <span class="vl">sans-serif</span>;
+  <span class="pr">font-size</span>: <span class="nm">16</span><span class="un">px</span>;       <span class="cm">/* tamaño base */</span>
+  <span class="pr">font-weight</span>: <span class="nm">400</span>;       <span class="cm">/* 100–900 o bold/normal */</span>
+  <span class="pr">font-style</span>: <span class="vl">normal</span>;    <span class="cm">/* normal | italic | oblique */</span>
+  <span class="pr">line-height</span>: <span class="nm">1.6</span>;       <span class="cm">/* interlineado (sin unidad) */</span>
+  <span class="pr">letter-spacing</span>: <span class="nm">0.05</span><span class="un">em</span>; <span class="cm">/* espaciado entre letras */</span>
+  <span class="pr">text-align</span>: <span class="vl">left</span>;       <span class="cm">/* left|center|right|justify */</span>
+  <span class="pr">text-transform</span>: <span class="vl">none</span>;   <span class="cm">/* uppercase|lowercase|capitalize */</span>
+  <span class="pr">text-decoration</span>: <span class="vl">none</span>;  <span class="cm">/* underline|overline|line-through */</span>
+}
+
+<span class="cm">/* Fuente de Google Fonts — en el HTML */</span>
+<span class="cm">/* &lt;link href="https://fonts.googleapis.com/css2?family=</span>
+<span class="cm">   Playfair+Display&display=swap" rel="stylesheet"/&gt; */</span>
+
+<span class="sl">h1</span> {
+  <span class="pr">font-family</span>: <span class="vl">'Playfair Display'</span>, <span class="vl">serif</span>;
+  <span class="pr">font-size</span>: <span class="fn">clamp</span>(<span class="nm">2</span><span class="un">rem</span>, <span class="nm">5</span><span class="un">vw</span>, <span class="nm">5</span><span class="un">rem</span>); <span class="cm">/* responsive font */</span>
+}</div>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-bar">
+        <div class="preview-bar-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span>Vista previa — tipografía</span>
+      </div>
+      <div class="preview-content" style="display:flex;flex-direction:column;gap:0.6rem">
+        <p style="font-size:2rem;font-weight:900;font-family:'Playfair Display',serif;color:var(--white)">Título con Playfair Display</p>
+        <p style="font-size:1rem;font-weight:400;color:var(--gray);line-height:1.7">Texto normal con DM Sans a 1rem, weight 400, interlineado 1.7. La tipografía es uno de los elementos más importantes del diseño web.</p>
+        <p style="font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--pink-soft);font-family:'DM Mono',monospace">Monoespaciada · uppercase · letter-spacing</p>
+        <p style="font-weight:700;color:var(--pink-light)">Negrita · <em style="font-weight:300">Light italic</em> · <span style="text-decoration:underline">Subrayado</span> · <span style="text-decoration:line-through;opacity:0.5">Tachado</span></p>
+      </div>
+    </div>
+
+    <!-- ══ 07 · DISPLAY Y POSICIÓN ══ -->
+    <div class="sec-label" id="display">
+      <span class="sec-dot" style="background:#c792ea"></span>
+      <span>07 · Display y posicionamiento</span>
+    </div>
+
+    <div class="prop-grid">
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">display</span><span class="prop-name">Tipo de visualización</span></div>
+        <p class="prop-desc">Controla cómo se muestra un elemento en el flujo del documento.</p>
+        <div class="prop-code"><span class="sl">.bloque</span>    { <span class="pr">display</span>: <span class="vl">block</span>; }
+<span class="sl">.linea</span>     { <span class="pr">display</span>: <span class="vl">inline</span>; }
+<span class="sl">.mixto</span>     { <span class="pr">display</span>: <span class="vl">inline-block</span>; }
+<span class="sl">.oculto</span>    { <span class="pr">display</span>: <span class="vl">none</span>; }
+<span class="sl">.flex</span>      { <span class="pr">display</span>: <span class="vl">flex</span>; }
+<span class="sl">.cuadricula</span>{ <span class="pr">display</span>: <span class="vl">grid</span>; }</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">position</span><span class="prop-name">Posicionamiento</span></div>
+        <p class="prop-desc">Controla cómo se ubica el elemento respecto a su contenedor o al viewport.</p>
+        <div class="prop-code"><span class="sl">.estatico</span>  { <span class="pr">position</span>: <span class="vl">static</span>; }
+<span class="sl">.relativo</span>  { <span class="pr">position</span>: <span class="vl">relative</span>; }
+<span class="sl">.absoluto</span>  { <span class="pr">position</span>: <span class="vl">absolute</span>; }
+<span class="sl">.fijo</span>      { <span class="pr">position</span>: <span class="vl">fixed</span>; }
+<span class="sl">.pegajoso</span>  { <span class="pr">position</span>: <span class="vl">sticky</span>; }
+
+<span class="sl">.ejemplo</span> {
+  <span class="pr">position</span>: <span class="vl">absolute</span>;
+  <span class="pr">top</span>: <span class="nm">20</span><span class="un">px</span>; <span class="pr">right</span>: <span class="nm">0</span>;
+}</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-head"><span class="prop-chip">overflow z-index</span><span class="prop-name">Control adicional</span></div>
+        <p class="prop-desc"><code>overflow</code> controla qué pasa con el contenido que desborda. <code>z-index</code> controla la capa visual.</p>
+        <div class="prop-code"><span class="sl">.contenedor</span> {
+  <span class="pr">overflow</span>: <span class="vl">hidden</span>;   <span class="cm">/* ocultar */</span>
+  <span class="pr">overflow</span>: <span class="vl">scroll</span>;   <span class="cm">/* scroll */</span>
+  <span class="pr">overflow-x</span>: <span class="vl">auto</span>;   <span class="cm">/* solo horizontal */</span>
+}
+<span class="sl">.encima</span> {
+  <span class="pr">position</span>: <span class="vl">relative</span>;
+  <span class="pr">z-index</span>: <span class="nm">10</span>;
+}</div>
+      </div>
+    </div>
+
+    <!-- ══ 08 · FLEXBOX ══ -->
+    <div class="sec-label" id="flexbox">
+      <span class="sec-dot" style="background:var(--css-blue)"></span>
+      <span>08 · Flexbox</span>
+    </div>
+
+    <p class="sec-intro">
+      Flexbox es el sistema de layout unidimensional de CSS. Organiza elementos en una fila o columna 
+      con control total sobre alineación, espaciado y orden. Es el más usado para componentes y barras de navegación.
+    </p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Flexbox</span>
+      </div>
+      <div class="code-block"><span class="sl">.contenedor</span> {
+  <span class="pr">display</span>: <span class="vl">flex</span>;
+
+  <span class="cm">/* Dirección */</span>
+  <span class="pr">flex-direction</span>: <span class="vl">row</span>;          <span class="cm">/* row | column | row-reverse */</span>
+
+  <span class="cm">/* Alineación horizontal */</span>
+  <span class="pr">justify-content</span>: <span class="vl">space-between</span>; <span class="cm">/* flex-start|center|space-around */</span>
+
+  <span class="cm">/* Alineación vertical */</span>
+  <span class="pr">align-items</span>: <span class="vl">center</span>;          <span class="cm">/* stretch|flex-start|flex-end */</span>
+
+  <span class="cm">/* Salto de línea si no caben */</span>
+  <span class="pr">flex-wrap</span>: <span class="vl">wrap</span>;
+
+  <span class="cm">/* Espacio entre hijos */</span>
+  <span class="pr">gap</span>: <span class="nm">1</span><span class="un">rem</span>;
+}
+
+<span class="sl">.hijo</span> {
+  <span class="pr">flex</span>: <span class="nm">1</span>;                        <span class="cm">/* crecer para llenar espacio */</span>
+  <span class="pr">flex-shrink</span>: <span class="nm">0</span>;                 <span class="cm">/* no encoger */</span>
+  <span class="pr">flex-basis</span>: <span class="nm">200</span><span class="un">px</span>;              <span class="cm">/* tamaño base */</span>
+  <span class="pr">order</span>: <span class="nm">2</span>;                       <span class="cm">/* reordenar visualmente */</span>
+}</div>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-bar"><div class="preview-bar-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div><span>flex-direction: row · justify-content: space-between</span></div>
+      <div class="preview-content">
+        <div class="flex-demo between" style="margin:0 0 1rem">
+          <div class="flex-item">A</div><div class="flex-item">B</div><div class="flex-item">C</div>
+        </div>
+        <div class="flex-demo center" style="margin:0 0 1rem">
+          <div class="flex-item">Centro</div><div class="flex-item">Centrado</div>
+        </div>
+        <div class="flex-demo" style="margin:0">
+          <div class="flex-item grow">Crece (flex:1)</div>
+          <div class="flex-item">Fijo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 09 · GRID ══ -->
+    <div class="sec-label" id="grid">
+      <span class="sec-dot" style="background:#c3e88d"></span>
+      <span>09 · CSS Grid</span>
+    </div>
+
+    <p class="sec-intro">
+      CSS Grid es el sistema de layout bidimensional. A diferencia de Flexbox, controla filas 
+      <em>y</em> columnas al mismo tiempo. Ideal para estructuras de página completas y galerías.
+    </p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Grid</span>
+      </div>
+      <div class="code-block"><span class="sl">.cuadricula</span> {
+  <span class="pr">display</span>: <span class="vl">grid</span>;
+
+  <span class="cm">/* Definir columnas */</span>
+  <span class="pr">grid-template-columns</span>: <span class="nm">1</span><span class="un">fr</span> <span class="nm">2</span><span class="un">fr</span> <span class="nm">1</span><span class="un">fr</span>;
+  <span class="pr">grid-template-columns</span>: <span class="fn">repeat</span>(<span class="nm">3</span>, <span class="nm">1</span><span class="un">fr</span>);
+  <span class="pr">grid-template-columns</span>: <span class="fn">repeat</span>(<span class="vl">auto-fill</span>, <span class="fn">minmax</span>(<span class="nm">250</span><span class="un">px</span>, <span class="nm">1</span><span class="un">fr</span>));
+
+  <span class="cm">/* Filas */</span>
+  <span class="pr">grid-template-rows</span>: <span class="vl">auto</span> <span class="nm">1</span><span class="un">fr</span> <span class="vl">auto</span>;
+
+  <span class="cm">/* Espacio entre celdas */</span>
+  <span class="pr">gap</span>: <span class="nm">1.5</span><span class="un">rem</span>;
+}
+
+<span class="sl">.elemento-ancho</span> {
+  <span class="pr">grid-column</span>: <span class="vl">span</span> <span class="nm">2</span>;           <span class="cm">/* ocupa 2 columnas */</span>
+  <span class="pr">grid-row</span>: <span class="vl">span</span> <span class="nm">2</span>;              <span class="cm">/* ocupa 2 filas */</span>
+}</div>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-bar"><div class="preview-bar-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div><span>grid-template-columns: repeat(3, 1fr)</span></div>
+      <div class="preview-content" style="display:flex;flex-direction:column;gap:1rem">
+        <div class="grid-demo cols3">
+          <div class="grid-item header span3">Header (span 3)</div>
+          <div class="grid-item sidebar">Sidebar</div>
+          <div class="grid-item span2">Contenido principal (span 2)</div>
+          <div class="grid-item">Col 1</div><div class="grid-item">Col 2</div><div class="grid-item">Col 3</div>
+          <div class="grid-item header span3">Footer (span 3)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 10 · TRANSICIONES ══ -->
+    <div class="sec-label" id="transiciones">
+      <span class="sec-dot" style="background:#ffcb6b"></span>
+      <span>10 · Transiciones</span>
+    </div>
+
+    <p class="sec-intro">Las transiciones animan el cambio de una propiedad CSS de un valor a otro, creando efectos suaves al pasar el cursor o cambiar de estado.</p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Transiciones</span>
+      </div>
+      <div class="code-block"><span class="sl">.boton</span> {
+  <span class="pr">background</span>: <span class="vl">#264de4</span>;
+  <span class="pr">color</span>: <span class="vl">white</span>;
+  <span class="pr">padding</span>: <span class="nm">0.6</span><span class="un">rem</span> <span class="nm">1.4</span><span class="un">rem</span>;
+  <span class="pr">border-radius</span>: <span class="nm">8</span><span class="un">px</span>;
+
+  <span class="cm">/* transition: propiedad duración función retardo */</span>
+  <span class="pr">transition</span>: <span class="vl">background</span> <span class="nm">0.3</span><span class="un">s</span> <span class="vl">ease</span>;
+
+  <span class="cm">/* Múltiples propiedades */</span>
+  <span class="pr">transition</span>:
+    <span class="vl">background</span> <span class="nm">0.3</span><span class="un">s</span> <span class="vl">ease</span>,
+    <span class="vl">transform</span>  <span class="nm">0.2</span><span class="un">s</span> <span class="vl">ease</span>,
+    <span class="vl">box-shadow</span> <span class="nm">0.3</span><span class="un">s</span> <span class="vl">ease</span>;
+
+  <span class="cm">/* O todas las propiedades */</span>
+  <span class="pr">transition</span>: <span class="vl">all</span> <span class="nm">0.3</span><span class="un">s</span> <span class="vl">ease</span>;
+}
+
+<span class="sl">.boton:hover</span> {
+  <span class="pr">background</span>: <span class="vl">#0033aa</span>;
+  <span class="pr">transform</span>: <span class="fn">translateY</span>(<span class="nm">-4</span><span class="un">px</span>);
+  <span class="pr">box-shadow</span>: <span class="nm">0</span> <span class="nm">12</span><span class="un">px</span> <span class="nm">24</span><span class="un">px</span> <span class="fn">rgba</span>(<span class="nm">38</span>,<span class="nm">77</span>,<span class="nm">228</span>,<span class="nm">0.4</span>);
+}</div>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-bar"><div class="preview-bar-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div><span>Pasa el cursor sobre los botones</span></div>
+      <div class="preview-content" style="display:flex;gap:1rem;flex-wrap:wrap">
+        <button style="background:var(--css-blue);color:#fff;border:none;padding:0.6rem 1.4rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.3s ease" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(38,77,228,0.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">Hover me</button>
+        <button style="background:transparent;color:var(--pink-light);border:2px solid var(--pink-deep);padding:0.6rem 1.4rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.3s ease" onmouseover="this.style.background='var(--pink-deep)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--pink-light)'">Borde → Relleno</button>
+        <button style="background:#c3e88d;color:#080808;border:none;padding:0.6rem 1.4rem;border-radius:999px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.3s ease" onmouseover="this.style.borderRadius='8px';this.style.transform='scale(1.05)'" onmouseout="this.style.borderRadius='999px';this.style.transform='none'">Forma cambia</button>
+      </div>
+    </div>
+
+    <!-- ══ 11 · ANIMACIONES ══ -->
+    <div class="sec-label" id="animaciones">
+      <span class="sec-dot" style="background:#c792ea"></span>
+      <span>11 · Animaciones con @keyframes</span>
+    </div>
+
+    <p class="sec-intro">
+      Las animaciones CSS permiten crear efectos complejos que se reproducen automáticamente, 
+      sin necesitar JavaScript. Se definen con <code>@keyframes</code> y se aplican con <code>animation</code>.
+    </p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — @keyframes y animation</span>
+      </div>
+      <div class="code-block"><span class="cm">/* 1. Definir la animación */</span>
+<span class="at">@keyframes</span> <span class="fn">pulsar</span> {
+  <span class="nm">0%</span>   { <span class="pr">transform</span>: <span class="fn">scale</span>(<span class="nm">1</span>);   <span class="pr">opacity</span>: <span class="nm">1</span>; }
+  <span class="nm">50%</span>  { <span class="pr">transform</span>: <span class="fn">scale</span>(<span class="nm">1.2</span>); <span class="pr">opacity</span>: <span class="nm">0.7</span>; }
+  <span class="nm">100%</span> { <span class="pr">transform</span>: <span class="fn">scale</span>(<span class="nm">1</span>);   <span class="pr">opacity</span>: <span class="nm">1</span>; }
+}
+
+<span class="at">@keyframes</span> <span class="fn">deslizar</span> {
+  <span class="vl">from</span> { <span class="pr">transform</span>: <span class="fn">translateX</span>(<span class="nm">-100%</span>); <span class="pr">opacity</span>: <span class="nm">0</span>; }
+  <span class="vl">to</span>   { <span class="pr">transform</span>: <span class="fn">translateX</span>(<span class="nm">0</span>);     <span class="pr">opacity</span>: <span class="nm">1</span>; }
+}
+
+<span class="cm">/* 2. Aplicar la animación */</span>
+<span class="sl">.elemento</span> {
+  <span class="cm">/* animation: nombre duración función retardo iteraciones dirección */</span>
+  <span class="pr">animation</span>: <span class="fn">pulsar</span> <span class="nm">2</span><span class="un">s</span> <span class="vl">ease-in-out</span> <span class="nm">0s</span> <span class="vl">infinite</span>;
+
+  <span class="cm">/* Propiedades individuales */</span>
+  <span class="pr">animation-name</span>: <span class="fn">deslizar</span>;
+  <span class="pr">animation-duration</span>: <span class="nm">0.5</span><span class="un">s</span>;
+  <span class="pr">animation-fill-mode</span>: <span class="vl">forwards</span>; <span class="cm">/* mantiene el estado final */</span>
+  <span class="pr">animation-play-state</span>: <span class="vl">paused</span>;  <span class="cm">/* pausar con JS */</span>
+}</div>
+    </div>
+
+    <div class="anim-row">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+        <div class="anim-box anim-pulse"></div>
+        <span class="anim-label">Pulsar</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+        <div class="anim-box anim-spin"></div>
+        <span class="anim-label">Girar</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+        <div class="anim-box anim-bounce"></div>
+        <span class="anim-label">Rebotar</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:0.4rem;overflow:hidden;max-width:160px">
+        <div class="anim-box anim-slide"></div>
+        <span class="anim-label">Deslizar</span>
+      </div>
+    </div>
+
+    <!-- ══ 12 · DISEÑO RESPONSIVO ══ -->
+    <div class="sec-label" id="responsivo">
+      <span class="sec-dot" style="background:#f07178"></span>
+      <span>12 · Diseño responsivo y Media Queries</span>
+    </div>
+
+    <p class="sec-intro">
+      El diseño responsivo adapta la apariencia de la página a cualquier tamaño de pantalla: 
+      celular, tablet o escritorio. Se logra con <strong style="color:var(--white)">Media Queries</strong> y unidades relativas.
+    </p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Media Queries y unidades relativas</span>
+      </div>
+      <div class="code-block"><span class="cm">/* ── Unidades relativas ── */</span>
+<span class="sl">.elemento</span> {
+  <span class="pr">width</span>: <span class="nm">90</span><span class="un">%</span>;          <span class="cm">/* % del contenedor padre */</span>
+  <span class="pr">font-size</span>: <span class="nm">1</span><span class="un">rem</span>;     <span class="cm">/* relativo al root (16px por defecto) */</span>
+  <span class="pr">padding</span>: <span class="nm">2</span><span class="un">em</span>;        <span class="cm">/* relativo al font-size del elemento */</span>
+  <span class="pr">height</span>: <span class="nm">100</span><span class="un">vh</span>;       <span class="cm">/* 100% del alto del viewport */</span>
+  <span class="pr">width</span>: <span class="nm">50</span><span class="un">vw</span>;         <span class="cm">/* 50% del ancho del viewport */</span>
+}
+
+<span class="cm">/* ── Media Queries — Mobile First ── */</span>
+<span class="cm">/* Estilos base: móvil */</span>
+<span class="sl">.tarjetas</span> {
+  <span class="pr">display</span>: <span class="vl">grid</span>;
+  <span class="pr">grid-template-columns</span>: <span class="nm">1</span><span class="un">fr</span>;  <span class="cm">/* 1 columna en móvil */</span>
+  <span class="pr">gap</span>: <span class="nm">1</span><span class="un">rem</span>;
+}
+
+<span class="cm">/* Tablet (768px o más) */</span>
+<span class="at">@media</span> (<span class="pr">min-width</span>: <span class="nm">768</span><span class="un">px</span>) {
+  <span class="sl">.tarjetas</span> {
+    <span class="pr">grid-template-columns</span>: <span class="fn">repeat</span>(<span class="nm">2</span>, <span class="nm">1</span><span class="un">fr</span>);
+  }
+}
+
+<span class="cm">/* Escritorio (1024px o más) */</span>
+<span class="at">@media</span> (<span class="pr">min-width</span>: <span class="nm">1024</span><span class="un">px</span>) {
+  <span class="sl">.tarjetas</span> {
+    <span class="pr">grid-template-columns</span>: <span class="fn">repeat</span>(<span class="nm">3</span>, <span class="nm">1</span><span class="un">fr</span>);
+  }
+}
+
+<span class="cm">/* Modo oscuro del sistema */</span>
+<span class="at">@media</span> (<span class="pr">prefers-color-scheme</span>: <span class="vl">dark</span>) {
+  <span class="sl">body</span> { <span class="pr">background</span>: <span class="vl">#080808</span>; }
+}
+
+<span class="cm">/* Orientación horizontal */</span>
+<span class="at">@media</span> (<span class="pr">orientation</span>: <span class="vl">landscape</span>) {
+  <span class="sl">.hero</span> { <span class="pr">min-height</span>: <span class="nm">80</span><span class="un">vh</span>; }
+}</div>
+    </div>
+
+    <!-- ══ 13 · VARIABLES CSS ══ -->
+    <div class="sec-label" id="variables">
+      <span class="sec-dot" style="background:#c3e88d"></span>
+      <span>13 · Variables CSS (Custom Properties)</span>
+    </div>
+
+    <p class="sec-intro">
+      Las variables CSS permiten almacenar valores reutilizables y crear sistemas de diseño coherentes. 
+      Se definen con <code>--nombre</code> y se usan con <code>var(--nombre)</code>.
+    </p>
+
+    <div class="code-block-wrap">
+      <div class="code-block-head">
+        <div class="code-block-dots"><span class="cbd cbd-r"></span><span class="cbd cbd-y"></span><span class="cbd cbd-g"></span></div>
+        <span class="code-block-lang">CSS — Variables y sistema de diseño</span>
+      </div>
+      <div class="code-block"><span class="cm">/* Definir variables globales en :root */</span>
+<span class="sl">:root</span> {
+  <span class="cm">/* Colores */</span>
+  <span class="pr">--color-primario</span>:  <span class="vl">#264de4</span>;
+  <span class="pr">--color-acento</span>:    <span class="vl">#f7c5d5</span>;
+  <span class="pr">--color-fondo</span>:     <span class="vl">#080808</span>;
+  <span class="pr">--color-texto</span>:     <span class="vl">#f5f5f5</span>;
+
+  <span class="cm">/* Tipografía */</span>
+  <span class="pr">--fuente-titulo</span>:   <span class="vl">'Playfair Display'</span>, serif;
+  <span class="pr">--fuente-cuerpo</span>:   <span class="vl">'DM Sans'</span>, sans-serif;
+  <span class="pr">--tam-base</span>:        <span class="nm">16</span><span class="un">px</span>;
+
+  <span class="cm">/* Espaciado */</span>
+  <span class="pr">--espacio-sm</span>:      <span class="nm">0.5</span><span class="un">rem</span>;
+  <span class="pr">--espacio-md</span>:      <span class="nm">1</span><span class="un">rem</span>;
+  <span class="pr">--espacio-lg</span>:      <span class="nm">2</span><span class="un">rem</span>;
+
+  <span class="cm">/* Bordes */</span>
+  <span class="pr">--radio-sm</span>:        <span class="nm">6</span><span class="un">px</span>;
+  <span class="pr">--radio-lg</span>:        <span class="nm">14</span><span class="un">px</span>;
+  <span class="pr">--radio-pill</span>:      <span class="nm">999</span><span class="un">px</span>;
+}
+
+<span class="cm">/* Usar las variables */</span>
+<span class="sl">.boton</span> {
+  <span class="pr">background</span>: <span class="fn">var</span>(<span class="pr">--color-primario</span>);
+  <span class="pr">color</span>: <span class="fn">var</span>(<span class="pr">--color-texto</span>);
+  <span class="pr">font-family</span>: <span class="fn">var</span>(<span class="pr">--fuente-cuerpo</span>);
+  <span class="pr">padding</span>: <span class="fn">var</span>(<span class="pr">--espacio-sm</span>) <span class="fn">var</span>(<span class="pr">--espacio-md</span>);
+  <span class="pr">border-radius</span>: <span class="fn">var</span>(<span class="pr">--radio-pill</span>);
+}
+
+<span class="cm">/* Modificar variables para modo oscuro */</span>
+<span class="sl">[data-tema="claro"]</span> {
+  <span class="pr">--color-fondo</span>: <span class="vl">#ffffff</span>;
+  <span class="pr">--color-texto</span>: <span class="vl">#111111</span>;
+}</div>
+    </div>
+
+    <!-- ══ 14 · BUENAS PRÁCTICAS ══ -->
+    <div class="sec-label" id="buenas">
+      <span class="sec-dot" style="background:#c3e88d"></span>
+      <span>14 · Buenas prácticas</span>
+    </div>
+
+    <div class="prop-grid">
+      <div class="prop-card" style="border-color:rgba(195,232,141,0.2)">
+        <div class="prop-card-head" style="border-color:rgba(195,232,141,0.1)">
+          <span class="prop-chip" style="color:#c3e88d;background:rgba(195,232,141,0.1);border-color:rgba(195,232,141,0.2)">✓ Hacer</span>
+          <span class="prop-name">Mobile First</span>
+        </div>
+        <p class="prop-desc">Diseña primero para móviles y usa <code>min-width</code> en tus media queries para escalar hacia pantallas más grandes.</p>
+        <div class="prop-code"><span class="cm">/* ✓ Mobile first */</span>
+<span class="sl">.nav</span> { <span class="pr">display</span>: <span class="vl">block</span>; }
+
+<span class="at">@media</span> (<span class="pr">min-width</span>: <span class="nm">768</span><span class="un">px</span>) {
+  <span class="sl">.nav</span> { <span class="pr">display</span>: <span class="vl">flex</span>; }
+}</div>
+      </div>
+      <div class="prop-card" style="border-color:rgba(195,232,141,0.2)">
+        <div class="prop-card-head" style="border-color:rgba(195,232,141,0.1)">
+          <span class="prop-chip" style="color:#c3e88d;background:rgba(195,232,141,0.1);border-color:rgba(195,232,141,0.2)">✓ Hacer</span>
+          <span class="prop-name">box-sizing: border-box</span>
+        </div>
+        <p class="prop-desc">Aplica siempre esto globalmente para que el padding y border no rompan el tamaño definido.</p>
+        <div class="prop-code"><span class="sl">*, *::before, *::after</span> {
+  <span class="pr">box-sizing</span>: <span class="vl">border-box</span>;
+}</div>
+      </div>
+      <div class="prop-card" style="border-color:rgba(195,232,141,0.2)">
+        <div class="prop-card-head" style="border-color:rgba(195,232,141,0.1)">
+          <span class="prop-chip" style="color:#c3e88d;background:rgba(195,232,141,0.1);border-color:rgba(195,232,141,0.2)">✓ Hacer</span>
+          <span class="prop-name">Usa variables CSS</span>
+        </div>
+        <p class="prop-desc">Define colores, tipografías y espaciados como variables en <code>:root</code> para mantener consistencia y fácil mantenimiento.</p>
+        <div class="prop-code"><span class="sl">:root</span> {
+  <span class="pr">--azul</span>: <span class="vl">#264de4</span>;
+}
+<span class="sl">.btn</span> {
+  <span class="pr">background</span>: <span class="fn">var</span>(<span class="pr">--azul</span>);
+}</div>
+      </div>
+      <div class="prop-card" style="border-color:rgba(240,113,120,0.2)">
+        <div class="prop-card-head" style="border-color:rgba(240,113,120,0.1)">
+          <span class="prop-chip" style="color:#f07178;background:rgba(240,113,120,0.1);border-color:rgba(240,113,120,0.2)">✗ Evitar</span>
+          <span class="prop-name">!important</span>
+        </div>
+        <p class="prop-desc">Evita usar <code>!important</code>. Si lo necesitas, es señal de que la estructura de tus estilos tiene problemas de especificidad.</p>
+        <div class="prop-code"><span class="cm">/* ✗ Evitar */</span>
+<span class="sl">.btn</span> {
+  <span class="pr">color</span>: <span class="vl">red</span> <span class="kw">!important</span>;
+}
+<span class="cm">/* ✓ Mejor: aumenta especificidad */</span>
+<span class="sl">.header .btn</span> {
+  <span class="pr">color</span>: <span class="vl">red</span>;
+}</div>
+      </div>
+      <div class="prop-card" style="border-color:rgba(240,113,120,0.2)">
+        <div class="prop-card-head" style="border-color:rgba(240,113,120,0.1)">
+          <span class="prop-chip" style="color:#f07178;background:rgba(240,113,120,0.1);border-color:rgba(240,113,120,0.2)">✗ Evitar</span>
+          <span class="prop-name">Selectores excesivos</span>
+        </div>
+        <p class="prop-desc">No encadenes más de 3 niveles de selectores. Hace el CSS difícil de mantener y sobrescribir.</p>
+        <div class="prop-code"><span class="cm">/* ✗ Demasiado específico */</span>
+<span class="sl">nav ul li a span</span> { <span class="pr">color</span>: <span class="vl">pink</span>; }
+
+<span class="cm">/* ✓ Mejor: usar clase */</span>
+<span class="sl">.nav-link</span> { <span class="pr">color</span>: <span class="vl">pink</span>; }</div>
+      </div>
+      <div class="prop-card" style="border-color:rgba(240,113,120,0.2)">
+        <div class="prop-card-head" style="border-color:rgba(240,113,120,0.1)">
+          <span class="prop-chip" style="color:#f07178;background:rgba(240,113,120,0.1);border-color:rgba(240,113,120,0.2)">✗ Evitar</span>
+          <span class="prop-name">px fijos para fuentes</span>
+        </div>
+        <p class="prop-desc">Usar <code>px</code> en fuentes impide que se escalen cuando el usuario ajusta el tamaño base del navegador.</p>
+        <div class="prop-code"><span class="cm">/* ✗ No escala con el usuario */</span>
+<span class="sl">body</span> { <span class="pr">font-size</span>: <span class="nm">16</span><span class="un">px</span>; }
+
+<span class="cm">/* ✓ Respeta preferencias */</span>
+<span class="sl">body</span> { <span class="pr">font-size</span>: <span class="nm">1</span><span class="un">rem</span>; }
+<span class="sl">h1</span>   { <span class="pr">font-size</span>: <span class="nm">2.5</span><span class="un">rem</span>; }</div>
+      </div>
+    </div>
+
+    <!-- Tabla de propiedades más usadas -->
+    <div class="sec-label" style="margin-top:3rem">
+      <span class="sec-dot" style="background:var(--pink-mid)"></span>
+      <span>Referencia rápida de propiedades</span>
+    </div>
+
+    <table class="attr-table">
+      <thead><tr><th>Propiedad</th><th>Categoría</th><th>Valores comunes</th></tr></thead>
+      <tbody>
+        <tr><td>color</td><td>Texto</td><td style="color:var(--white)">#hex, rgb(), rgba(), nombre</td></tr>
+        <tr><td>font-size</td><td>Texto</td><td style="color:var(--white)">rem, em, px, %, vw, clamp()</td></tr>
+        <tr><td>font-weight</td><td>Texto</td><td style="color:var(--white)">100–900, bold, normal</td></tr>
+        <tr><td>background</td><td>Fondo</td><td style="color:var(--white)">color, url(), linear-gradient()</td></tr>
+        <tr><td>border</td><td>Borde</td><td style="color:var(--white)">2px solid #color</td></tr>
+        <tr><td>border-radius</td><td>Borde</td><td style="color:var(--white)">px, %, 999px (pill)</td></tr>
+        <tr><td>padding / margin</td><td>Espaciado</td><td style="color:var(--white)">px, rem, em, %, auto</td></tr>
+        <tr><td>width / height</td><td>Dimensión</td><td style="color:var(--white)">px, %, vw, vh, auto, min/max</td></tr>
+        <tr><td>display</td><td>Layout</td><td style="color:var(--white)">block, flex, grid, inline, none</td></tr>
+        <tr><td>position</td><td>Layout</td><td style="color:var(--white)">static, relative, absolute, fixed, sticky</td></tr>
+        <tr><td>opacity</td><td>Visibilidad</td><td style="color:var(--white)">0 (invisible) a 1 (visible)</td></tr>
+        <tr><td>transform</td><td>Transformación</td><td style="color:var(--white)">translate, scale, rotate, skew</td></tr>
+        <tr><td>transition</td><td>Animación</td><td style="color:var(--white)">propiedad duración función</td></tr>
+        <tr><td>animation</td><td>Animación</td><td style="color:var(--white)">nombre duración timing iteraciones</td></tr>
+        <tr><td>box-shadow</td><td>Sombra</td><td style="color:var(--white)">x y blur spread color</td></tr>
+        <tr><td>cursor</td><td>Cursor</td><td style="color:var(--white)">pointer, default, not-allowed, grab</td></tr>
+      </tbody>
+    </table>
+
+    <div class="article-footer">
+      <span class="article-footer-text">Tarea 04 · Cultura Digital 2 · Inteligencia Artificial</span>
+      <a class="back-btn-bottom" href="index.html">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Volver al portafolio
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <p class="f-school">Centro de Bachillerato Tecnológico Industrial y de Servicios 144</p>
+    <p class="f-spec">Inteligencia Artificial</p>
+    <p class="f-name">Fernanda Antonella Ramos Molina</p>
+  </footer>
+
+  <!-- ══ SIDEBAR JS ══ -->
+  <script>
+    // ── Elementos ──
+    const sidebar       = document.getElementById('sidebar');
+    const overlay       = document.getElementById('sidebarOverlay');
+    const toggleBtn     = document.getElementById('sidebarToggle');
+    const progressFill  = document.getElementById('progressFill');
+    const progressText  = document.getElementById('progressText');
+    const sidebarLinks  = document.querySelectorAll('.sidebar-links a');
+
+    // ── Toggle móvil ──
+    toggleBtn.addEventListener('click', () => {
+      const open = sidebar.classList.toggle('open');
+      overlay.classList.toggle('show', open);
+      toggleBtn.innerHTML = open
+        ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`;
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    });
+
+    // ── Cerrar sidebar al hacer click en un link (móvil) ──
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 960) {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+        }
+      });
+    });
+
+    // ── IntersectionObserver: resalta el link activo ──
+    const sectionIds = ['intro','sintaxis','selectores','box-model','colores',
+                        'tipografia','display','flexbox','grid','transiciones',
+                        'animaciones','responsivo','variables','buenas'];
+
+    const sections = sectionIds
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    // Mapa id → link de sidebar
+    const linkMap = {};
+    sidebarLinks.forEach(a => {
+      const id = a.getAttribute('href').replace('#', '');
+      linkMap[id] = a;
+    });
+
+    let activeId = null;
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          if (id !== activeId) {
+            // Quita activo anterior
+            if (activeId && linkMap[activeId])
+              linkMap[activeId].classList.remove('active');
+            // Marca nuevo activo
+            activeId = id;
+            if (linkMap[id]) {
+              linkMap[id].classList.add('active');
+              // Auto-scroll del sidebar para que el link sea visible
+              const activeLink = linkMap[id];
+              const linksContainer = document.getElementById('sidebarLinks');
+              const linkTop    = activeLink.offsetTop;
+              const linkHeight = activeLink.offsetHeight;
+              const contHeight = linksContainer.clientHeight;
+              const scrollTop  = linksContainer.scrollTop;
+              if (linkTop < scrollTop || linkTop + linkHeight > scrollTop + contHeight) {
+                linksContainer.scrollTo({
+                  top: linkTop - contHeight / 2 + linkHeight / 2,
+                  behavior: 'smooth'
+                });
+              }
+            }
+          }
+          // Actualizar progreso
+          updateProgress();
+        }
+      });
+    }, {
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0
+    });
+
+    sections.forEach(s => observer.observe(s));
+
+    // ── Barra de progreso de scroll ──
+    function updateProgress() {
+      const scrollTop    = window.scrollY;
+      const docHeight    = document.documentElement.scrollHeight - window.innerHeight;
+      const pct          = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+      progressFill.style.width = pct + '%';
+      progressText.textContent = pct + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  </script>
+
+</body>
+</html>

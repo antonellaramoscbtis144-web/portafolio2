@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tarea 02 — Lenguajes de Diseño y Programación · Cultura Digital 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink-light: #f7c5d5;
+      --pink-mid:   #e8a0b8;
+      --pink-soft:  #d4789a;
+      --pink-deep:  #b85c7e;
+      --black:      #080808;
+      --black-2:    #111111;
+      --black-3:    #1a1a1a;
+      --black-4:    #222222;
+      --white:      #f5f5f5;
+      --gray:       rgba(245,245,245,0.55);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; }
+
+    /* ─── BOTÓN BACK FIJO ─── */
+    .nav-back {
+      position: fixed; top: 1.4rem; left: 1.4rem; z-index: 100;
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+      background: rgba(8,8,8,0.8);
+      border: 1px solid rgba(247,197,213,0.25);
+      color: var(--pink-light);
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+      font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.55rem 1rem 0.55rem 0.8rem;
+      border-radius: 999px; backdrop-filter: blur(10px);
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .nav-back:hover { background: var(--pink-deep); border-color: var(--pink-deep); color: #fff; }
+
+    /* ─── HERO — diferente a portada principal: horizontal + código animado ─── */
+    .hero {
+      min-height: 100vh;
+      background: var(--black-2);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      padding: 6rem 2rem 5rem;
+      text-align: center;
+    }
+
+    /* Fondo: líneas diagonales en lugar de cuadrícula */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(184,92,126,0.07) 0px,
+        rgba(184,92,126,0.07) 1px,
+        transparent 1px,
+        transparent 40px
+      );
+      pointer-events: none;
+    }
+
+    /* Círculo decorativo grande */
+    .hero-circle {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,92,126,0.1);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .hero-circle-2 {
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,92,126,0.08);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; z-index: 2; max-width: 700px; }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--pink-deep); color: #fff;
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.25rem 0.8rem; border-radius: 3px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 900; line-height: 1.05;
+      color: var(--white); margin-bottom: 0.5rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--pink-light), var(--pink-deep));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      color: var(--gray); margin-bottom: 2.5rem; line-height: 1.7;
+    }
+
+    /* Chips de categorías en el hero */
+    .hero-cats {
+      display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .hero-cat {
+      display: flex; align-items: center; gap: 0.5rem;
+      border: 1px solid rgba(247,197,213,0.2);
+      background: rgba(247,197,213,0.05);
+      color: var(--pink-light);
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.4rem 1rem; border-radius: 999px;
+    }
+    .hero-cat-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+
+    /* Terminal decorativa */
+    .hero-terminal {
+      background: #0d0d0d;
+      border: 1px solid rgba(184,92,126,0.2);
+      border-radius: 10px;
+      padding: 1rem 1.4rem;
+      text-align: left;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.8;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .terminal-bar {
+      display: flex; gap: 6px; margin-bottom: 0.8rem;
+    }
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .t-red { background: #ff5f57; }
+    .t-yellow { background: #febc2e; }
+    .t-green { background: #28c840; }
+    .t-line-pink { color: var(--pink-soft); }
+    .t-line-white { color: rgba(245,245,245,0.7); }
+    .t-line-gray { color: rgba(245,245,245,0.3); }
+    .t-cursor { display: inline-block; width: 8px; height: 1em; background: var(--pink-soft); vertical-align: middle; animation: blink 1.1s step-end infinite; }
+    @keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+
+    /* ─── CONTENIDO PRINCIPAL ─── */
+    .content { max-width: 980px; margin: 0 auto; padding: 5rem 2rem 6rem; }
+
+    /* Separador de sección */
+    .section-label {
+      display: flex; align-items: center; gap: 0.8rem; margin-bottom: 2.5rem; margin-top: 4rem;
+    }
+    .section-label:first-child { margin-top: 0; }
+    .section-label-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .section-label span {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.28em; text-transform: uppercase; color: var(--pink-soft);
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: rgba(247,197,213,0.12);
+    }
+
+    .section-intro {
+      font-size: 0.9rem; color: var(--gray); line-height: 1.8;
+      margin-bottom: 2.5rem; max-width: 680px;
+    }
+
+    /* ─── TARJETA DE LENGUAJE ─── */
+    .lang-card {
+      background: var(--black-3);
+      border: 1px solid rgba(184,92,126,0.18);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      transition: border-color 0.3s;
+    }
+    .lang-card:hover { border-color: rgba(184,92,126,0.45); }
+
+    .lang-header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.6rem 1.8rem;
+      border-bottom: 1px solid rgba(184,92,126,0.1);
+    }
+
+    /* Logo SVG del lenguaje */
+    .lang-logo {
+      width: 52px; height: 52px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; overflow: hidden;
+    }
+    .lang-logo svg { width: 36px; height: 36px; }
+
+    .lang-info h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+      color: var(--white); margin-bottom: 0.2rem;
+    }
+    .lang-info p { font-size: 0.8rem; color: var(--gray); line-height: 1.5; }
+
+    .lang-badge {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.3rem 0.8rem; border-radius: 999px;
+      border: 1px solid; white-space: nowrap; align-self: flex-start;
+    }
+
+    .lang-body {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    }
+
+    .lang-desc {
+      padding: 1.6rem 1.8rem;
+      border-right: 1px solid rgba(184,92,126,0.1);
+    }
+    .lang-desc p { font-size: 0.85rem; color: var(--gray); line-height: 1.8; margin-bottom: 0.8rem; }
+    .lang-desc p:last-child { margin-bottom: 0; }
+
+    .lang-uses {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem;
+    }
+    .use-chip {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--pink-mid); background: rgba(184,92,126,0.1);
+      border: 1px solid rgba(184,92,126,0.2);
+      padding: 0.2rem 0.6rem; border-radius: 999px;
+    }
+
+    /* Bloque de código */
+    .lang-code-wrap { padding: 1.4rem 1.6rem; }
+    .code-label {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--pink-deep); margin-bottom: 0.6rem;
+    }
+    .code-block {
+      background: #0d0d0d;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Colores de sintaxis */
+    .kw  { color: #c792ea; }   /* keyword — morado suave */
+    .fn  { color: #82aaff; }   /* function — azul */
+    .st  { color: #c3e88d; }   /* string — verde */
+    .nm  { color: #f78c6c; }   /* number — naranja */
+    .cm  { color: #546e7a; font-style: italic; } /* comment — gris */
+    .tg  { color: #f07178; }   /* tag — rojo suave */
+    .at  { color: #ffcb6b; }   /* attribute — amarillo */
+    .vl  { color: #c3e88d; }   /* value — verde */
+    .pr  { color: var(--pink-soft); } /* property — rosa */
+    .sl  { color: #89ddff; }   /* selector — celeste */
+
+    /* Responsive lang-body */
+    @media (max-width: 680px) {
+      .lang-body { grid-template-columns: 1fr; }
+      .lang-desc { border-right: none; border-bottom: 1px solid rgba(184,92,126,0.1); }
+      .lang-header { grid-template-columns: auto 1fr; }
+      .lang-badge { display: none; }
+    }
+
+    /* ─── TABLA COMPARATIVA ─── */
+    .compare-table {
+      width: 100%; border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.8rem;
+    }
+    .compare-table th {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--pink-soft);
+      padding: 0.7rem 1rem; text-align: left;
+      border-bottom: 1px solid rgba(184,92,126,0.25);
+    }
+    .compare-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--gray); vertical-align: top;
+    }
+    .compare-table tr:hover td { background: rgba(184,92,126,0.04); }
+    .compare-table td:first-child { color: var(--white); font-weight: 500; }
+    .dot-yes { color: #7ec89e; }
+    .dot-no  { color: rgba(245,245,245,0.2); }
+
+    /* ─── FOOTER DEL ARTÍCULO ─── */
+    .article-footer {
+      border-top: 1px solid rgba(184,92,126,0.2);
+      padding-top: 2rem; margin-top: 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .article-footer-text {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink-deep);
+    }
+    .back-btn-bottom {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; background: transparent;
+      border: 1px solid var(--pink-deep); color: var(--pink-light);
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+      font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.6rem 1.2rem; border-radius: 999px;
+      transition: background 0.25s, color 0.25s;
+    }
+    .back-btn-bottom:hover { background: var(--pink-deep); color: #fff; }
+
+    /* ─── PIE DE PÁGINA ─── */
+    footer {
+      background: var(--black); border-top: 1px solid rgba(184,92,126,0.2);
+      padding: 2rem; text-align: center;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    footer p { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; }
+    footer .f-school { color: var(--pink-mid); }
+    footer .f-spec   { color: var(--pink-deep); }
+    footer .f-name   { color: rgba(245,245,245,0.4); margin-top: 0.2rem; }
+  </style>
+</head>
+<body>
+
+  <!-- BOTÓN REGRESAR -->
+  <a class="nav-back" href="index.html">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Regresar
+  </a>
+
+  <!-- ══════ HERO ══════ -->
+  <section class="hero">
+    <div class="hero-circle"></div>
+    <div class="hero-circle-2"></div>
+    <div class="hero-inner">
+      <span class="hero-tag">Tarea 02 · Cultura Digital 2</span>
+      <h1 class="hero-title">Lenguajes de<br><em>Diseño & Programación</em></h1>
+      <p class="hero-subtitle">
+        Explora los principales lenguajes que dan vida a la web, las aplicaciones de escritorio<br>
+        y las herramientas de diseño y maquetación digital.
+      </p>
+      <div class="hero-cats">
+        <span class="hero-cat"><span class="hero-cat-dot" style="background:#4fc3f7"></span>Desarrollo Web</span>
+        <span class="hero-cat"><span class="hero-cat-dot" style="background:#a5d6a7"></span>Escritorio</span>
+        <span class="hero-cat"><span class="hero-cat-dot" style="background:var(--pink-soft)"></span>Diseño & Maquetación</span>
+      </div>
+      <div class="hero-terminal">
+        <div class="terminal-bar">
+          <span class="t-dot t-red"></span>
+          <span class="t-dot t-yellow"></span>
+          <span class="t-dot t-green"></span>
+        </div>
+        <div><span class="t-line-pink">$</span> <span class="t-line-white">cultura_digital_2</span> <span class="t-line-gray">--tarea 02</span></div>
+        <div><span class="t-line-gray">→ Cargando lenguajes...</span></div>
+        <div><span class="t-line-pink">✓</span> <span class="t-line-white">Web:</span> <span class="t-line-gray">HTML, CSS, JavaScript, PHP</span></div>
+        <div><span class="t-line-pink">✓</span> <span class="t-line-white">Escritorio:</span> <span class="t-line-gray">Python, Java, C++</span></div>
+        <div><span class="t-line-pink">✓</span> <span class="t-line-white">Diseño:</span> <span class="t-line-gray">CSS, SVG, Markdown</span></div>
+        <div><span class="t-line-gray">_</span><span class="t-cursor"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ CONTENIDO ══════ -->
+  <main class="content">
+
+    <!-- ══════════════════════════════════════
+         CATEGORÍA 1: DESARROLLO WEB
+    ══════════════════════════════════════ -->
+    <div class="section-label">
+      <span class="section-label-dot" style="background:#4fc3f7"></span>
+      <span>Desarrollo Web</span>
+    </div>
+    <p class="section-intro">
+      Los lenguajes de desarrollo web son los cimientos de todo lo que ves en internet. 
+      Se dividen en tecnologías de <strong style="color:var(--white)">frontend</strong> 
+      (lo que el usuario ve) y <strong style="color:var(--white)">backend</strong> 
+      (la lógica del servidor). Juntos hacen posibles desde blogs hasta plataformas globales.
+    </p>
+
+    <!-- HTML -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#e34c26">
+          <!-- HTML5 logo SVG -->
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 3l1.765 20.601L16 26.415l9.234-2.814L27 3H5zm17.379 6.975l-.165 1.856H12.8l.32 3.578h9.094l-.48 5.366-5.74 1.591-5.735-1.591-.391-4.38h2.278l.199 2.22 3.648 1.013 3.651-1.013.38-4.253H10.44l-.479-5.387H22l-.165 1.856-.056.144z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>HTML</h3>
+          <p>HyperText Markup Language — La estructura de toda página web</p>
+        </div>
+        <span class="lang-badge" style="color:#e34c26;border-color:#e34c2640">Frontend · Markup</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>HTML es el lenguaje de marcado estándar para crear páginas web. Define la <strong style="color:var(--white)">estructura y el contenido</strong>: párrafos, títulos, imágenes, enlaces y formularios. No es un lenguaje de programación, sino de marcado.</p>
+          <p>Creado por Tim Berners-Lee en 1991, su versión actual es <strong style="color:var(--white)">HTML5</strong>, que añadió soporte nativo para audio, video, canvas y APIs semánticas.</p>
+          <div class="lang-uses">
+            <span class="use-chip">Estructura web</span>
+            <span class="use-chip">SEO</span>
+            <span class="use-chip">Accesibilidad</span>
+            <span class="use-chip">Formularios</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">&lt;!-- Estructura básica HTML5 --&gt;</span>
+<span class="tg">&lt;!DOCTYPE</span> <span class="at">html</span><span class="tg">&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang=</span><span class="st">"es"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;head&gt;</span>
+    <span class="tg">&lt;title&gt;</span>Mi página<span class="tg">&lt;/title&gt;</span>
+  <span class="tg">&lt;/head&gt;</span>
+  <span class="tg">&lt;body&gt;</span>
+    <span class="tg">&lt;h1&gt;</span>Hola mundo<span class="tg">&lt;/h1&gt;</span>
+    <span class="tg">&lt;p&gt;</span>Bienvenido a la web.<span class="tg">&lt;/p&gt;</span>
+    <span class="tg">&lt;a</span> <span class="at">href=</span><span class="st">"#"</span><span class="tg">&gt;</span>Ver más<span class="tg">&lt;/a&gt;</span>
+  <span class="tg">&lt;/body&gt;</span>
+<span class="tg">&lt;/html&gt;</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#264de4">
+          <!-- CSS3 logo SVG -->
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.902 27.201L4 5h24l-1.903 22.197L15.993 30 5.902 27.201zm17.118-17.24l.233-2.608H8.747l.701 7.828h11.562l-.394 4.405-4.62 1.28-4.624-1.28-.308-3.44H8.76l.608 6.822 6.631 1.834 6.624-1.834.928-10.407H12.19l-.239-2.6h11.069z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>CSS</h3>
+          <p>Cascading Style Sheets — El estilo visual de la web</p>
+        </div>
+        <span class="lang-badge" style="color:#264de4;border-color:#264de440">Frontend · Estilos</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>CSS controla la <strong style="color:var(--white)">presentación visual</strong> de las páginas: colores, tipografías, espaciados, animaciones y layouts. Trabaja siempre en conjunto con HTML.</p>
+          <p>Con <strong style="color:var(--white)">CSS3</strong> llegaron Flexbox, Grid, variables CSS, transiciones y animaciones, que permiten crear interfaces modernas y responsivas sin JavaScript.</p>
+          <div class="lang-uses">
+            <span class="use-chip">Diseño responsivo</span>
+            <span class="use-chip">Animaciones</span>
+            <span class="use-chip">Layouts</span>
+            <span class="use-chip">Temas</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">/* Variables y estilos globales */</span>
+<span class="sl">:root</span> {
+  <span class="pr">--color-rosa</span>: <span class="vl">#f7c5d5</span>;
+  <span class="pr">--fuente</span>: <span class="st">'DM Sans'</span>, sans-serif;
+}
+
+<span class="sl">.tarjeta</span> {
+  <span class="pr">background</span>: <span class="vl">var(--color-rosa)</span>;
+  <span class="pr">border-radius</span>: <span class="nm">12px</span>;
+  <span class="pr">padding</span>: <span class="nm">1.5rem</span>;
+  <span class="pr">transition</span>: <span class="vl">transform 0.3s</span>;
+}
+
+<span class="sl">.tarjeta:hover</span> {
+  <span class="pr">transform</span>: <span class="fn">translateY</span>(<span class="nm">-6px</span>);
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#f7df1e">
+          <!-- JS logo SVG -->
+          <svg viewBox="0 0 32 32" fill="#323330" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 2h28v28H2V2zm15.855 21.63c.376.802 1.029 1.388 2.197 1.388 1.232 0 2.021-.617 2.021-1.469 0-1.021-.81-1.384-2.167-1.978l-.743-.319c-2.148-.915-3.577-2.062-3.577-4.483 0-2.231 1.701-3.93 4.357-3.93 1.891 0 3.249.659 4.228 2.384l-2.316 1.485c-.509-.912-1.057-1.271-1.913-1.271-.872 0-1.426.553-1.426 1.271 0 .89.554 1.253 1.834 1.805l.743.319c2.531 1.085 3.96 2.191 3.96 4.675 0 2.68-2.107 4.14-4.933 4.14-2.765 0-4.55-1.317-5.421-3.046l2.356-1.971zM10.5 23.354c.292.519.559.958 1.2.958.613 0 1-.241 1-1.176V13.5h2.896v9.678c0 1.937-1.135 2.818-2.793 2.818-1.494 0-2.359-.774-2.801-1.705l1.498-1.937z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>JavaScript</h3>
+          <p>El lenguaje de programación de la web — interactividad y lógica</p>
+        </div>
+        <span class="lang-badge" style="color:#f7df1e;border-color:#f7df1e40">Frontend + Backend</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>JavaScript es el único lenguaje de programación nativo de los navegadores. Permite añadir <strong style="color:var(--white)">interactividad, validación, animaciones</strong> y comunicación con servidores en tiempo real.</p>
+          <p>Con <strong style="color:var(--white)">Node.js</strong> también se usa en el backend. Frameworks como React, Vue y Angular lo convierten en el lenguaje más demandado del mundo.</p>
+          <div class="lang-uses">
+            <span class="use-chip">Interactividad</span>
+            <span class="use-chip">APIs</span>
+            <span class="use-chip">React / Vue</span>
+            <span class="use-chip">Node.js</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">// Función con arrow function</span>
+<span class="kw">const</span> <span class="fn">saludar</span> = (nombre) <span class="kw">=></span> {
+  <span class="kw">return</span> <span class="st">`Hola, ${nombre}!`</span>;
+};
+
+<span class="cm">// Fetch a una API</span>
+<span class="kw">async function</span> <span class="fn">obtenerDatos</span>() {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'/api/datos'</span>);
+  <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+  console.<span class="fn">log</span>(data);
+}
+
+<span class="fn">saludar</span>(<span class="st">"Antonella"</span>); <span class="cm">// "Hola, Antonella!"</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHP -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#777bb4">
+          <!-- PHP logo SVG -->
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="16" cy="16" rx="14" ry="9" fill="#777bb4"/>
+            <text x="16" y="20" text-anchor="middle" font-family="monospace" font-size="9" font-weight="bold" fill="white">php</text>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>PHP</h3>
+          <p>Hypertext Preprocessor — El lenguaje servidor de la web clásica</p>
+        </div>
+        <span class="lang-badge" style="color:#777bb4;border-color:#777bb440">Backend · Servidor</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>PHP es un lenguaje de scripting del lado del servidor, diseñado específicamente para el desarrollo web. Potencia más del <strong style="color:var(--white)">75% de los sitios web</strong> del mundo, incluyendo WordPress.</p>
+          <p>Se integra directamente en HTML y se conecta fácilmente con bases de datos como <strong style="color:var(--white)">MySQL</strong>. Es ideal para crear sistemas de login, formularios y gestores de contenido.</p>
+          <div class="lang-uses">
+            <span class="use-chip">WordPress</span>
+            <span class="use-chip">Bases de datos</span>
+            <span class="use-chip">CMS</span>
+            <span class="use-chip">Laravel</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">&lt;?php</span>
+<span class="cm">// Variables y condiciones</span>
+<span class="kw">$nombre</span> = <span class="st">"Antonella"</span>;
+<span class="kw">$edad</span>   = <span class="nm">17</span>;
+
+<span class="kw">if</span> (<span class="kw">$edad</span> >= <span class="nm">18</span>) {
+  <span class="kw">echo</span> <span class="st">"Mayor de edad"</span>;
+} <span class="kw">else</span> {
+  <span class="kw">echo</span> <span class="st">"Hola, $nombre!"</span>;
+}
+
+<span class="cm">// Consulta a base de datos</span>
+<span class="kw">$query</span> = <span class="st">"SELECT * FROM usuarios"</span>;
+<span class="cm">?&gt;</span></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════
+         CATEGORÍA 2: ESCRITORIO
+    ══════════════════════════════════════ -->
+    <div class="section-label" style="margin-top:5rem">
+      <span class="section-label-dot" style="background:#a5d6a7"></span>
+      <span>Desarrollo de Escritorio</span>
+    </div>
+    <p class="section-intro">
+      Los lenguajes de escritorio permiten crear aplicaciones que se instalan y ejecutan directamente en el sistema operativo, 
+      sin necesidad de internet. Son más potentes para tareas de alto rendimiento como videojuegos, software científico y herramientas de productividad.
+    </p>
+
+    <!-- Python -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:linear-gradient(135deg,#3776ab,#ffd343)">
+          <!-- Python logo simplified -->
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.885 2.1c-7.1 0-6.651 3.07-6.651 3.07v3.19h6.752v1H6.545S2 8.8 2 16.005s4.013 6.912 4.013 6.912H8.33v-3.324s-.13-4.013 3.95-4.013h6.818s3.82.062 3.82-3.695V5.367S23.435 2.1 15.885 2.1zm-3.772 2.178a1.232 1.232 0 11-.001 2.465 1.232 1.232 0 01.001-2.465z" fill="#3776ab"/>
+            <path d="M16.115 29.9c7.1 0 6.651-3.07 6.651-3.07v-3.19H16.01v-1h9.446S30 23.2 30 15.995s-4.013-6.912-4.013-6.912H23.67v3.324s.13 4.013-3.95 4.013h-6.818s-3.82-.062-3.82 3.695v6.518S8.565 29.9 16.115 29.9zm3.772-2.178a1.232 1.232 0 110-2.464 1.232 1.232 0 010 2.464z" fill="#ffd343"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>Python</h3>
+          <p>El lenguaje más versátil — IA, ciencia de datos y automatización</p>
+        </div>
+        <span class="lang-badge" style="color:#3776ab;border-color:#3776ab40">Escritorio · IA · Data</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>Python es el lenguaje de más rápido crecimiento en el mundo. Su sintaxis clara y legible lo hace ideal para <strong style="color:var(--white)">principiantes y expertos</strong> por igual.</p>
+          <p>Es el lenguaje número uno en <strong style="color:var(--white)">Inteligencia Artificial y Machine Learning</strong>, con bibliotecas como TensorFlow, PyTorch y scikit-learn. También se usa para automatización, scripts, scraping y desarrollo web (Django, Flask).</p>
+          <div class="lang-uses">
+            <span class="use-chip">Inteligencia Artificial</span>
+            <span class="use-chip">Automatización</span>
+            <span class="use-chip">Data Science</span>
+            <span class="use-chip">Django</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm"># Clase y herencia en Python</span>
+<span class="kw">class</span> <span class="fn">Estudiante</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nombre):
+        self.nombre = nombre
+
+    <span class="kw">def</span> <span class="fn">presentarse</span>(self):
+        <span class="kw">return</span> <span class="st">f"Soy {self.nombre}"</span>
+
+<span class="cm"># Lista por comprensión</span>
+notas = [<span class="nm">8</span>, <span class="nm">9</span>, <span class="nm">10</span>, <span class="nm">7</span>]
+aprobados = [n <span class="kw">for</span> n <span class="kw">in</span> notas <span class="kw">if</span> n >= <span class="nm">8</span>]
+
+alumna = <span class="fn">Estudiante</span>(<span class="st">"Antonella"</span>)
+<span class="fn">print</span>(alumna.<span class="fn">presentarse</span>())</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Java -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#007396">
+          <!-- Java cup simplified -->
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.1 22.3s-1.2.7.85.93c2.48.28 3.74.24 6.47-.27 0 0 .72.45 1.72.84-6.12 2.62-13.85-.15-9.04-1.5zM11.4 19.5s-1.34 1 .71 1.21c2.65.27 4.74.29 8.37-.4 0 0 .5.51 1.29.79-7.41 2.17-15.67.17-10.37-1.6z"/>
+            <path d="M17.4 13.87c1.51 1.74-.4 3.3-.4 3.3s3.83-1.97 2.07-4.44c-1.64-2.3-2.9-3.44 3.92-7.38 0 0-10.71 2.67-5.59 8.52z" fill="#f89820"/>
+            <path d="M24.85 24.26s.89.73-.98 1.3c-3.55 1.07-14.77 1.4-17.89.04-1.12-.49.98-1.16 1.64-1.3.69-.15 1.08-.12 1.08-.12-1.24-.87-8.02 1.72-3.44 2.46 12.48 2.02 22.76-.91 19.59-2.38z"/>
+            <path d="M12.7 15.85s-5.68 1.35-2.01 1.84c1.55.21 4.64.16 7.52-.08 2.35-.2 4.71-.63 4.71-.63s-.83.35-1.43.76c-5.77 1.52-16.93.81-13.71-.74 2.71-1.32 4.92-1.15 4.92-1.15zM22.1 21.4c5.87-3.05 3.16-5.98 1.26-5.59-.46.1-.67.19-.67.19s.17-.27.5-.38c3.73-1.31 6.6 3.87-1.21 5.93 0 0 .09-.08.12-.15z" fill="#f89820"/>
+            <path d="M19.1 4s3.25 3.25-3.08 8.24c-5.07 4.01-1.16 6.3 0 8.91-2.96-2.67-5.13-5.02-3.67-7.21C14.44 10.89 20.56 9.3 19.1 4z" fill="#f89820"/>
+            <path d="M13.3 29.37c5.64.36 14.3-.2 14.51-2.86 0 0-.39 1.01-4.66 1.81-4.83.9-10.79.79-14.32.22 0 0 .72.6 4.47.83z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>Java</h3>
+          <p>Write once, run anywhere — El gigante empresarial</p>
+        </div>
+        <span class="lang-badge" style="color:#007396;border-color:#00739640">Escritorio · Android</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>Java es uno de los lenguajes más usados en el mundo empresarial. Su filosofía <em>"escribe una vez, ejecuta en cualquier lugar"</em> lo hace extremadamente portable gracias a la <strong style="color:var(--white)">Java Virtual Machine (JVM)</strong>.</p>
+          <p>Es el lenguaje base de <strong style="color:var(--white)">Android</strong>, y se usa ampliamente en sistemas bancarios, aplicaciones empresariales y backend de grandes plataformas.</p>
+          <div class="lang-uses">
+            <span class="use-chip">Android</span>
+            <span class="use-chip">Empresarial</span>
+            <span class="use-chip">Spring Boot</span>
+            <span class="use-chip">Backend</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">// Clase con método en Java</span>
+<span class="kw">public class</span> <span class="fn">Calculadora</span> {
+
+  <span class="kw">public static int</span> <span class="fn">sumar</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+    <span class="kw">return</span> a + b;
+  }
+
+  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+    <span class="kw">int</span> resultado = <span class="fn">sumar</span>(<span class="nm">5</span>, <span class="nm">3</span>);
+    System.out.<span class="fn">println</span>(
+      <span class="st">"Resultado: "</span> + resultado
+    ); <span class="cm">// Resultado: 8</span>
+  }
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C++ -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#00599c">
+          <!-- C++ logo -->
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2C8.268 2 2 8.268 2 16s6.268 14 14 14 14-6.268 14-14S23.732 2 16 2zm-2.5 19.5c-3.314 0-6-2.686-6-6s2.686-6 6-6c1.657 0 3.156.672 4.243 1.757l-1.414 1.414A3.978 3.978 0 0013.5 11.5c-2.209 0-4 1.791-4 4s1.791 4 4 4c1.105 0 2.105-.448 2.829-1.172l1.414 1.414A5.978 5.978 0 0113.5 21.5zm9.5-5.5h-2v2h-1.5v-2h-2V14.5h2v-2H21v2h2V16zm5 0h-2v2h-1.5v-2h-2V14.5h2v-2H26v2h2V16z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>C++</h3>
+          <p>Alto rendimiento — Videojuegos, sistemas operativos y software crítico</p>
+        </div>
+        <span class="lang-badge" style="color:#00599c;border-color:#00599c40">Escritorio · Sistemas</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>C++ es uno de los lenguajes más potentes y eficientes. Al estar muy cercano al hardware, ofrece un <strong style="color:var(--white)">rendimiento excepcional</strong> que lo hace indispensable en videojuegos, sistemas operativos y software en tiempo real.</p>
+          <p>Motores como <strong style="color:var(--white)">Unreal Engine</strong> están escritos en C++. También se usa en software de Adobe (Photoshop), navegadores (Chrome) y sistemas embebidos.</p>
+          <div class="lang-uses">
+            <span class="use-chip">Videojuegos</span>
+            <span class="use-chip">Unreal Engine</span>
+            <span class="use-chip">Sistemas</span>
+            <span class="use-chip">Rendimiento</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">// Programa básico en C++</span>
+<span class="kw">#include</span> <span class="st">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+  <span class="kw">int</span> contador = <span class="nm">0</span>;
+
+  <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i < <span class="nm">5</span>; i++) {
+    contador += i;
+  }
+
+  cout << <span class="st">"Suma: "</span> 
+       << contador << endl;
+  <span class="kw">return</span> <span class="nm">0</span>;
+}</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════
+         CATEGORÍA 3: DISEÑO Y MAQUETACIÓN
+    ══════════════════════════════════════ -->
+    <div class="section-label" style="margin-top:5rem">
+      <span class="section-label-dot" style="background:var(--pink-soft)"></span>
+      <span>Diseño & Maquetación</span>
+    </div>
+    <p class="section-intro">
+      El diseño digital no solo se hace con herramientas gráficas: existen lenguajes y formatos específicos 
+      para definir estilos, gráficos vectoriales, documentos y estructuras visuales de manera precisa y escalable.
+    </p>
+
+    <!-- SVG -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#ff9800">
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3C8.82 3 3 8.82 3 16s5.82 13 13 13 13-5.82 13-13S23.18 3 16 3zm0 2c.76 0 1.5.08 2.22.22L16 8.44l-2.22-3.22A11 11 0 0116 5zm-3.28.72L14.5 9H9.5a11.02 11.02 0 013.22-3.28zM19.28 5.72A11.02 11.02 0 0122.5 9h-5l1.78-3.28zM9 11h14l-2.19 3.79A4 4 0 0016 13a4 4 0 00-4.81 1.79L9 11zm7 4a2 2 0 110 4 2 2 0 010-4zm-7.81 1.79L10.5 23H5.22A11 11 0 018.19 16.79zm14.62 0A11 11 0 0126.78 23H21.5l2.31-6.21zM16 19a2 2 0 012 2c0 .56-.23 1.06-.59 1.42L16 26l-1.41-3.58A2 2 0 0116 19zm-3.41 4.42L14.5 27H9.5a11.01 11.01 0 013.09-3.58zM19.41 23.42A11.01 11.01 0 0122.5 27h-5l1.91-3.58z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>SVG</h3>
+          <p>Scalable Vector Graphics — Gráficos vectoriales para la web</p>
+        </div>
+        <span class="lang-badge" style="color:#ff9800;border-color:#ff980040">Diseño · Vectorial</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>SVG es un formato de imagen <strong style="color:var(--white)">basado en XML</strong> que describe gráficos vectoriales. A diferencia de PNG o JPG, los SVG se escalan sin perder calidad a cualquier tamaño.</p>
+          <p>Se usa para <strong style="color:var(--white)">íconos, logotipos, ilustraciones e infografías</strong> en la web. Puede ser manipulado con CSS y JavaScript, y es editado con herramientas como Illustrator o Inkscape.</p>
+          <div class="lang-uses">
+            <span class="use-chip">Íconos</span>
+            <span class="use-chip">Logos</span>
+            <span class="use-chip">Animaciones</span>
+            <span class="use-chip">Infografías</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">&lt;!-- SVG: círculo animado --&gt;</span>
+<span class="tg">&lt;svg</span> <span class="at">viewBox=</span><span class="st">"0 0 100 100"</span>
+     <span class="at">xmlns=</span><span class="st">"http://www.w3.org/2000/svg"</span><span class="tg">&gt;</span>
+
+  <span class="tg">&lt;circle</span>
+    <span class="at">cx=</span><span class="st">"50"</span> <span class="at">cy=</span><span class="st">"50"</span> <span class="at">r=</span><span class="st">"40"</span>
+    <span class="at">fill=</span><span class="st">"#f7c5d5"</span>
+    <span class="at">stroke=</span><span class="st">"#b85c7e"</span>
+    <span class="at">stroke-width=</span><span class="st">"3"</span><span class="tg">/&gt;</span>
+
+  <span class="tg">&lt;text</span> <span class="at">x=</span><span class="st">"50"</span> <span class="at">y=</span><span class="st">"55"</span>
+    <span class="at">text-anchor=</span><span class="st">"middle"</span>
+    <span class="at">font-size=</span><span class="st">"14"</span><span class="tg">&gt;</span>
+    Hola SVG
+  <span class="tg">&lt;/text&gt;</span>
+<span class="tg">&lt;/svg&gt;</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Markdown -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#083fa1">
+          <!-- Markdown logo -->
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28 7H4a2 2 0 00-2 2v14a2 2 0 002 2h24a2 2 0 002-2V9a2 2 0 00-2-2zM12 21H9v-6l-3 3-3-3v6H0V11h3l3 3.5L12 11v10zm6-3.5l3.5 3.5-1.5 1.5-2-2v5h-2v-5l-2 2-1.5-1.5L16 18V11h2v6.5z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>Markdown</h3>
+          <p>Lenguaje de marcado ligero — Documentación y contenido</p>
+        </div>
+        <span class="lang-badge" style="color:#083fa1;border-color:#083fa140">Diseño · Documentación</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>Markdown es un lenguaje de marcado ligero que permite dar <strong style="color:var(--white)">formato a texto plano</strong> con una sintaxis muy simple. Se convierte automáticamente a HTML.</p>
+          <p>Es usado en <strong style="color:var(--white)">GitHub, Notion, Reddit, Discord</strong> y prácticamente toda herramienta de documentación moderna. Los archivos README de proyectos se escriben en Markdown.</p>
+          <div class="lang-uses">
+            <span class="use-chip">GitHub</span>
+            <span class="use-chip">Documentación</span>
+            <span class="use-chip">Blogs</span>
+            <span class="use-chip">Notion</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm"># Título principal (H1)</span>
+<span class="kw">## Subtítulo (H2)</span>
+
+Texto normal con **negrita**,
+*cursiva* y `código inline`.
+
+<span class="st">- Elemento de lista</span>
+<span class="st">- Otro elemento</span>
+
+<span class="fn">[Enlace](https://www.ejemplo.com)</span>
+
+<span class="nm">```python</span>
+<span class="cm">print("Hola Markdown")</span>
+<span class="nm">```</span>
+
+<span class="tg">&gt;</span> Cita en bloque</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SASS/SCSS -->
+    <div class="lang-card">
+      <div class="lang-header">
+        <div class="lang-logo" style="background:#cc6699">
+          <!-- Sass logo -->
+          <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2C8.268 2 2 8.268 2 16s6.268 14 14 14 14-6.268 14-14S23.732 2 16 2zm3.5 18.1c-.7.9-2 1.4-3.8 1.4-1.6 0-2.9-.4-3.7-1.2-.6-.6-.9-1.4-.9-2.4 0-.2 0-.4.1-.7h1.9c-.1.3-.1.5-.1.6 0 .5.1.9.4 1.2.4.4 1.1.6 2.1.6 1.3 0 2.2-.5 2.2-1.3 0-.4-.2-.7-.6-.9-.4-.2-1.2-.5-2.3-.7-1.3-.3-2.2-.7-2.7-1.2-.5-.5-.8-1.2-.8-2 0-.9.4-1.7 1.1-2.3.7-.6 1.7-.9 3-.9 1.5 0 2.7.4 3.4 1.2.5.5.7 1.2.7 2h-1.9c0-.4-.1-.7-.3-.9-.3-.3-.8-.5-1.7-.5-1.1 0-1.8.4-1.8 1.1 0 .4.2.7.5.9.3.2.9.4 1.9.6 1.4.3 2.3.7 2.9 1.2.5.5.8 1.2.8 2 0 .9-.4 1.7-1.1 2.3l-.3.2z"/>
+          </svg>
+        </div>
+        <div class="lang-info">
+          <h3>SASS / SCSS</h3>
+          <p>CSS con superpoderes — Variables, mixins y anidamiento</p>
+        </div>
+        <span class="lang-badge" style="color:#cc6699;border-color:#cc669940">Diseño · Preprocesador</span>
+      </div>
+      <div class="lang-body">
+        <div class="lang-desc">
+          <p>SASS (con sintaxis SCSS) es un <strong style="color:var(--white)">preprocesador CSS</strong> que extiende las capacidades del CSS estándar. Permite usar variables, anidamiento, mixins y funciones antes de que CSS los soportara nativamente.</p>
+          <p>Es ampliamente usado en proyectos profesionales con <strong style="color:var(--white)">Bootstrap, Angular y grandes sistemas de diseño</strong>. El código SCSS se compila a CSS estándar para el navegador.</p>
+          <div class="lang-uses">
+            <span class="use-chip">Bootstrap</span>
+            <span class="use-chip">Variables</span>
+            <span class="use-chip">Mixins</span>
+            <span class="use-chip">Sistemas de diseño</span>
+          </div>
+        </div>
+        <div class="lang-code-wrap">
+          <p class="code-label">Ejemplo de sintaxis</p>
+          <div class="code-block"><span class="cm">// Variables y mixins SCSS</span>
+<span class="pr">$primario</span>: <span class="vl">#f7c5d5</span>;
+<span class="pr">$radio</span>: <span class="nm">12px</span>;
+
+<span class="kw">@mixin</span> <span class="fn">flex-center</span> {
+  <span class="pr">display</span>: <span class="vl">flex</span>;
+  <span class="pr">align-items</span>: <span class="vl">center</span>;
+  <span class="pr">justify-content</span>: <span class="vl">center</span>;
+}
+
+<span class="sl">.boton</span> {
+  <span class="kw">@include</span> <span class="fn">flex-center</span>;
+  <span class="pr">background</span>: <span class="vl">$primario</span>;
+  <span class="pr">border-radius</span>: <span class="vl">$radio</span>;
+
+  <span class="sl">&:hover</span> {
+    <span class="pr">background</span>: <span class="fn">darken</span>(<span class="vl">$primario</span>, <span class="nm">15%</span>);
+  }
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TABLA COMPARATIVA FINAL ── -->
+    <div class="section-label" style="margin-top:5rem">
+      <span class="section-label-dot" style="background:var(--pink-mid)"></span>
+      <span>Tabla comparativa</span>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Lenguaje</th>
+          <th>Categoría</th>
+          <th>Dificultad</th>
+          <th>¿Web?</th>
+          <th>¿Escritorio?</th>
+          <th>¿Diseño?</th>
+          <th>Demanda laboral</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>HTML</td><td>Markup</td><td>Básica</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td class="dot-yes">✓</td><td>★★★★☆</td></tr>
+        <tr><td>CSS</td><td>Estilos</td><td>Básica-Media</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td class="dot-yes">✓</td><td>★★★★☆</td></tr>
+        <tr><td>JavaScript</td><td>Programación</td><td>Media</td><td class="dot-yes">✓</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td>★★★★★</td></tr>
+        <tr><td>PHP</td><td>Backend</td><td>Media</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td class="dot-no">—</td><td>★★★☆☆</td></tr>
+        <tr><td>Python</td><td>Programación</td><td>Básica-Alta</td><td class="dot-yes">✓</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td>★★★★★</td></tr>
+        <tr><td>Java</td><td>Programación</td><td>Media-Alta</td><td class="dot-yes">✓</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td>★★★★☆</td></tr>
+        <tr><td>C++</td><td>Sistemas</td><td>Alta</td><td class="dot-no">—</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td>★★★★☆</td></tr>
+        <tr><td>SVG</td><td>Gráficos</td><td>Básica</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td class="dot-yes">✓</td><td>★★★☆☆</td></tr>
+        <tr><td>Markdown</td><td>Documentación</td><td>Muy básica</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td class="dot-yes">✓</td><td>★★★☆☆</td></tr>
+        <tr><td>SCSS</td><td>Estilos avanzados</td><td>Media</td><td class="dot-yes">✓</td><td class="dot-no">—</td><td class="dot-yes">✓</td><td>★★★★☆</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Footer artículo -->
+    <div class="article-footer">
+      <span class="article-footer-text">Tarea 02 · Cultura Digital 2 · Inteligencia Artificial</span>
+      <a class="back-btn-bottom" href="index.html">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Volver al portafolio
+      </a>
+    </div>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer>
+    <p class="f-school">Centro de Bachillerato Tecnológico Industrial y de Servicios 144</p>
+    <p class="f-spec">Inteligencia Artificial</p>
+    <p class="f-name">Fernanda Antonella Ramos Molina</p>
+  </footer>
+
+</body>
+</html>

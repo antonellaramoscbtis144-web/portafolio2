@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portafolio - Cultura Digital 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink-light: #f7c5d5;
+      --pink-mid:   #e8a0b8;
+      --pink-soft:  #d4789a;
+      --pink-deep:  #b85c7e;
+      --black:      #080808;
+      --black-card: #0f0f0f;
+      --black-mid:  #161616;
+      --white:      #f5f5f5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ───────────────── PORTADA ───────────────── */
+    .cover {
+      min-height: 100vh;
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* Patrón de cuadrícula rosa */
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(184,92,126,0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,92,126,0.18) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    /* Líneas decorativas laterales */
+    .cover::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, transparent, var(--pink-soft), transparent);
+    }
+
+    .cover-right-line {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, transparent, var(--pink-soft), transparent);
+    }
+
+
+    .cover-inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .label-portafolio {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--pink-mid);
+      border: 1px solid var(--pink-deep);
+      padding: 0.3rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 0.4rem;
+    }
+
+    .cover-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 9vw, 7rem);
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--pink-light) 0%, var(--pink-soft) 50%, var(--pink-deep) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    .cover-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--pink-light);
+      opacity: 0.9;
+      line-height: 1;
+    }
+
+    .cover-specialty {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(0.85rem, 2vw, 1.1rem);
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--pink-mid);
+      margin-top: 0.3rem;
+    }
+
+    .cover-divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--pink-soft), transparent);
+      margin: 0.8rem 0;
+    }
+
+    .cover-author {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      opacity: 0.85;
+      letter-spacing: 0.05em;
+    }
+    .cover-author span {
+      color: var(--pink-light);
+      font-weight: 400;
+    }
+
+    /* Redes Sociales */
+    .social-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.4rem;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      padding: 0.5rem 1.2rem;
+      border: 1px solid var(--pink-deep);
+      border-radius: 2px;
+      color: var(--pink-light);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--pink-deep);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+      z-index: 0;
+    }
+
+    .social-link:hover::before { transform: scaleX(1); }
+    .social-link:hover { color: var(--black); }
+
+    .social-link svg, .social-link span { position: relative; z-index: 1; }
+
+    /* ───────────────── GRID DE TAREAS ───────────────── */
+    .tasks-section {
+      background: var(--black-mid);
+      padding: 5rem 2rem;
+    }
+
+    .tasks-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--pink-light);
+      text-align: center;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+
+    .section-sub {
+      text-align: center;
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--pink-deep);
+      margin-bottom: 3rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 800px) {
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-image-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.25);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .card-body {
+      padding: 1.4rem 1.4rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .card-badge {
+      display: inline-block;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.75rem;
+      border-radius: 999px;
+      width: fit-content;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-category {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--pink-soft);
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      color: rgba(245,245,245,0.55);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      padding: 0.6rem 1.4rem;
+      background: var(--pink-light);
+      border: none;
+      color: #1a1a1a;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 999px;
+      width: fit-content;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    .card-btn:hover {
+      background: var(--pink-soft);
+      color: #fff;
+    }
+
+    .card-btn::after {
+      content: '→';
+      font-size: 0.9rem;
+    }
+
+    /* ───────────────── PIE DE PÁGINA ───────────────── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(184,92,126,0.3);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    footer .footer-school {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--pink-mid);
+    }
+
+    footer .footer-specialty {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--pink-deep);
+    }
+
+    footer .footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--white);
+      opacity: 0.8;
+      margin-top: 0.3rem;
+    }
+
+    footer .footer-copy {
+      font-size: 0.65rem;
+      color: rgba(245,245,245,0.3);
+      margin-top: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ PORTADA ══════════ -->
+  <section class="cover">
+    <div class="cover-right-line"></div>
+
+    <div class="cover-inner">
+      <span class="label-portafolio">Portafolio</span>
+
+      <h1 class="cover-title">Cultura Digital</h1>
+      <p class="cover-num">2</p>
+
+      <p class="cover-specialty">Inteligencia Artificial</p>
+
+      <div class="cover-divider"></div>
+
+      <p class="cover-author">by <span>Antonella Ramos</span></p>
+
+      <!-- Redes sociales en horizontal -->
+      <div class="social-row">
+        <a class="social-link" href="https://www.facebook.com/antonella.molina.314130/" target="_blank">
+          <!-- Facebook icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+          <span>Facebook</span>
+        </a>
+        <a class="social-link" href="https://www.instagram.com/_ra.mol_antx/" target="_blank">
+          <!-- Instagram icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+          <span>Instagram</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ TAREAS ══════════ -->
+  <section class="tasks-section">
+    <h2>Mis Tareas</h2>
+    <p class="section-sub">Actividades del semestre</p>
+
+    <div class="cards-grid">
+
+      <!-- TAREA 01 — reemplaza src="" con tu imagen, edita categoría, título y descripción -->
+      <div class="card">
+
+       <img class="card-image" src="imagenes/timm.webp" alt="Tim Berners-Lee">
+
+        <div class="card-body">
+          <span class="card-badge">Tarea 01</span>
+          <p class="card-category">Timothy John Berners-Lee</p>
+          <h3 class="card-title">El Padre Del Internet</h3>
+          <p class="card-desc">Sir Timothy John Berners-Lee (Londres, 1955) es el científico británico considerado el padre de la World Wide Web. En 1989, mientras trabajaba en el CERN (Suiza), propuso un sistema de gestión de información que daría origen a la web tal como la conocemos hoy.</p>
+          <a class="card-btn" href="tarea1.html">Ver tarea</a>
+        </div>
+      </div>
+
+      <!-- TAREA 02 -->
+      <div class="card">
+
+      <img class="card-image" src="imagenes/fotoprogramacion.png">
+
+        <div class="card-body">
+          <span class="card-badge">Tarea 02</span>
+          <p class="card-category"></p>
+          <h3 class="card-title">Lenguajes De Diseño Y Programacion</h3>
+          <p class="card-desc">Existen diferentes lenguajes, cada uno con un enfoque específico, existen lenguajes de diseño y maquetación y lenguajes de programación.</p>
+          <a class="card-btn" href="tarea2.html">Ver tarea</a>
+        </div>
+      </div>
+
+      <!-- TAREA 03 -->
+      <div class="card">
+
+          <img class="card-image" src="imagenes/html33.jfif">
+       
+        <div class="card-body">
+          <span class="card-badge">Tarea 03</span>
+          <p class="card-category">html 5</p>
+          <h3 class="card-title">Guia Para Aprender "html5"</h3>
+          <p class="card-desc">HTML5 es la base sobre la que se construye la web moderna, funcionando en conjunto con CSS3 y JavaScript para crear experiencias digitales ricas, accesibles y compatibles con dispositivos móviles.</p>
+          <a class="card-btn" href="tarea3.html">Ver tarea</a>
+        </div>
+      </div>
+
+      <!-- TAREA 04 -->
+      <div class="card">
+
+         <img class="card-image" src="imagenes/css3.png">
+
+        <div class="card-body">
+          <span class="card-badge">Tarea 04</span>
+          <p class="card-category">Css3</p>
+          <h3 class="card-title">Guia Para Aprender "Css3"</h3>
+          <p class="card-desc">CSS3 es la tercera versión de las Hojas de Estilo en Cascada (Cascading Style Sheets).
+          CSS3 trabaja en conjunto con HTML5 y JavaScript formando el trío esencial del desarrollo web moderno. Gracias a CSS3, los diseñadores pueden crear interfaces atractivas, fluidas y adaptables a cualquier dispositivo, sin depender de imágenes o programas externos.</p>
+          <a class="card-btn" href="tarea04.html">Ver tarea</a>
+        </div>
+      </div>
+
+      <!-- TAREA 05 -->
+ 
+ <div class="card">
+        
+         <img class="card-image" src="imagenes/arduino.webp">
+
+        <div class="card-body">
+          <span class="card-badge">Tarea 05</span>
+          <p class="card-category">Arduino</p>
+          <h3 class="card-title">Título de la tarea</h3>
+          <p class="card-desc">Creando figuras con html y css.</p>
+          <a class="card-btn" href="tarea5.html">Ver tarea</a>
+        </div>
+      </div>
+
+      <!-- TAREA 06 -->
+  
+   <div class="card">
+
+         <img class="card-image" src="imagenes/python.png">
+
+        <div class="card-body">
+          <span class="card-badge">Tarea 06</span>
+          <p class="card-category">Python</p>
+          <h3 class="card-title">Conceptos generales de Python</h3>
+          <p class="card-desc">De cero a entender el lenguaje más usado en Inteligencia Artificial. Aprende variables, estructuras de control, funciones y más con ejemplos prácticos.</p>
+          <a class="card-btn" href="tarea6.html">Ver tarea</a>
+        </div>
+      </div>
+
+     <!-- TAREA 07 -->
+<div class="card">
+
+   <img class="card-image" src="imagenes/arrduino.webp">
+
+  <div class="card-body">
+    <span class="card-badge">Tarea 07</span>
+    <p class="card-category">Arduino</p>
+    <h3 class="card-title">Componentes de Arduino</h3>
+    <p class="card-desc">
+      Sensores y demas hardware compatible con Arduino.
+    </p>
+    <a class="card-btn" href="tarea7.html">Ver tarea</a>
+  </div>
+</div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ PIE DE PÁGINA ══════════ -->
+  <footer>
+    <p class="footer-school">Centro de Bachillerato Tecnológico Industrial y de Servicios 144</p>
+    <p class="footer-specialty">Inteligencia Artificial</p>
+    <p class="footer-name">Fernanda Antonella Ramos Molina</p>
+    <p class="footer-copy">© 2025 · Cultura Digital 2 · Todos los derechos reservados</p>
+  </footer>
+
+</body>
+</html>
